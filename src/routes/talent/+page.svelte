@@ -1,5 +1,7 @@
 <script lang="ts">
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import PageBanner from '$lib/components/PageBanner.svelte';
+	import PageIntro from '$lib/components/PageIntro.svelte';
 	import { resolve } from '$app/paths';
 	import { services, site } from '$lib/data/site';
 </script>
@@ -9,15 +11,13 @@
 	<meta name="description" content={services.talent.description} />
 </svelte:head>
 
-<img src="https://www.wdmc.tw/assets/images/active-performance-1.jpg" alt="表演培訓" class="h-auto w-full" />
+<PageBanner src="https://www.wdmc.tw/assets/images/active-performance-1.jpg" alt="表演培訓" />
 
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h1 class="text-3xl font-bold text-gray-800 md:text-4xl">{services.talent.title}</h1>
-		<p class="mt-3 text-lg font-medium text-orange-600">{services.talent.subtitle}</p>
-		<p class="mt-6 leading-relaxed text-gray-600">{services.talent.description}</p>
-	</div>
-</section>
+<PageIntro
+	title={services.talent.title}
+	subtitle={services.talent.subtitle}
+	description={services.talent.description}
+/>
 
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">

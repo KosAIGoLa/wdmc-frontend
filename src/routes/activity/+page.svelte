@@ -1,5 +1,8 @@
 <script lang="ts">
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import PageBanner from '$lib/components/PageBanner.svelte';
+	import PageIntro from '$lib/components/PageIntro.svelte';
+	import IconCard from '$lib/components/IconCard.svelte';
 	import { resolve } from '$app/paths';
 	import { services, asset, site } from '$lib/data/site';
 </script>
@@ -9,25 +12,20 @@
 	<meta name="description" content={services.activity.description} />
 </svelte:head>
 
-<img src={asset('index-banner2.jpg', true)} alt="勢爵影視" class="h-auto w-full" />
+<PageBanner src={asset('index-banner2.jpg', true)} alt="勢爵影視" />
 
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h1 class="text-3xl font-bold text-gray-800 md:text-4xl">{services.activity.title}</h1>
-		<p class="mt-3 text-lg font-medium text-orange-600">{services.activity.subtitle}</p>
-		<p class="mt-6 leading-relaxed text-gray-600">{services.activity.description}</p>
-	</div>
-</section>
+<PageIntro
+	title={services.activity.title}
+	subtitle={services.activity.subtitle}
+	description={services.activity.description}
+/>
 
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<SectionTitle title="影視服務項目" />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each services.activity.items as item (item.label)}
-				<div class="flex flex-col items-center rounded-lg bg-white p-6 text-center shadow-sm">
-					<img src={asset(item.icon)} alt={item.label} class="h-16 w-16 object-contain" />
-					<h4 class="mt-4 font-bold text-gray-800">{item.label}</h4>
-				</div>
+				<IconCard icon={item.icon} label={item.label} />
 			{/each}
 		</div>
 	</div>

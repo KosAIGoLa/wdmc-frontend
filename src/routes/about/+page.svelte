@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import PageBanner from '$lib/components/PageBanner.svelte';
 	import { resolve } from '$app/paths';
 	import { about, asset, site } from '$lib/data/site';
 </script>
@@ -9,7 +10,7 @@
 	<meta name="description" content={about.intro} />
 </svelte:head>
 
-<img src={about.banner.src} alt={about.banner.alt} class="h-auto w-full" />
+<PageBanner src={about.banner.src} alt={about.banner.alt} />
 
 <!-- Features -->
 <section class="py-12">

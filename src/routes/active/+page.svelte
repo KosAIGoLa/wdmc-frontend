@@ -1,6 +1,7 @@
 <script lang="ts">
 	import BannerCarousel from '$lib/components/BannerCarousel.svelte';
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import ListCard from '$lib/components/ListCard.svelte';
 	import { resolve } from '$app/paths';
 	import { services, asset, site } from '$lib/data/site';
 </script>
@@ -32,14 +33,7 @@
 				<h2 class="text-2xl font-bold text-gray-800">客製化尾牙春酒活動內容</h2>
 				<div class="mt-6 grid gap-4 sm:grid-cols-2">
 					{#each services.active.items as item (item.title)}
-						<div class="rounded-lg bg-white p-4 shadow-sm">
-							<h4 class="font-bold text-gray-800">{item.title}</h4>
-							<ul class="mt-1 list-inside list-disc text-sm text-gray-600">
-								{#each item.points as point (point)}
-									<li>{point}</li>
-								{/each}
-							</ul>
-						</div>
+						<ListCard title={item.title} points={item.points} compact />
 					{/each}
 				</div>
 			</div>

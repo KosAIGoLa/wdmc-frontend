@@ -1,6 +1,8 @@
 <script lang="ts">
 	import BannerCarousel from '$lib/components/BannerCarousel.svelte';
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import PageIntro from '$lib/components/PageIntro.svelte';
+	import ListCard from '$lib/components/ListCard.svelte';
 	import { resolve } from '$app/paths';
 	import { services, asset, site } from '$lib/data/site';
 </script>
@@ -12,27 +14,18 @@
 
 <BannerCarousel banners={services.active.banners} />
 
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h1 class="text-3xl font-bold text-gray-800 md:text-4xl">{services.community.title}</h1>
-		<p class="mt-3 text-lg font-medium text-orange-600">{services.community.subtitle}</p>
-		<p class="mt-6 leading-relaxed text-gray-600">{services.community.description}</p>
-	</div>
-</section>
+<PageIntro
+	title={services.community.title}
+	subtitle={services.community.subtitle}
+	description={services.community.description}
+/>
 
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<SectionTitle title="硬體設備與搭建服務" />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each services.community.items as item (item.title)}
-				<div class="rounded-lg bg-white p-6 shadow-sm">
-					<h4 class="text-lg font-bold text-gray-800">{item.title}</h4>
-					<ul class="mt-2 list-inside list-disc text-sm text-gray-600">
-						{#each item.points as point (point)}
-							<li>{point}</li>
-						{/each}
-					</ul>
-				</div>
+				<ListCard title={item.title} points={item.points} />
 			{/each}
 		</div>
 	</div>

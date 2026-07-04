@@ -1,6 +1,9 @@
 <script lang="ts">
 	import BannerCarousel from '$lib/components/BannerCarousel.svelte';
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import IconCard from '$lib/components/IconCard.svelte';
+	import ActivityCard from '$lib/components/ActivityCard.svelte';
+	import ClipCard from '$lib/components/ClipCard.svelte';
 	import { resolve } from '$app/paths';
 	import { home, asset, site } from '$lib/data/site';
 </script>
@@ -53,10 +56,7 @@
 		<SectionTitle title={home.marketing.title} />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each home.marketing.items as item (item.label)}
-				<div class="flex flex-col items-center rounded-lg bg-white p-6 text-center shadow-sm">
-					<img src={asset(item.icon)} alt={item.label} class="h-16 w-16 object-contain" />
-					<h4 class="mt-4 text-base font-bold text-gray-800">{item.label}</h4>
-				</div>
+				<IconCard icon={item.icon} label={item.label} />
 			{/each}
 		</div>
 		<div class="mt-10 flex justify-center">
@@ -84,14 +84,7 @@
 		<SectionTitle title={home.featured.title} />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each home.featured.items as item (item.title)}
-				<a href={item.href} class="group overflow-hidden rounded-lg bg-white shadow-sm">
-					<div class="overflow-hidden">
-						<img src={item.src} alt={item.title} class="h-56 w-full object-cover transition group-hover:scale-105" />
-					</div>
-					<div class="p-4 text-center">
-						<h4 class="font-bold text-gray-800">{item.title}</h4>
-					</div>
-				</a>
+				<ActivityCard href={item.href} src={item.src} title={item.title} />
 			{/each}
 		</div>
 	</div>
@@ -107,10 +100,7 @@
 		</div>
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each home.media.items as item (item.label)}
-				<div class="flex flex-col items-center rounded-lg bg-white p-6 text-center shadow-sm">
-					<img src={asset(item.icon)} alt={item.label} class="h-16 w-16 object-contain" />
-					<h4 class="mt-4 font-bold text-gray-800">{item.label}</h4>
-				</div>
+				<IconCard icon={item.icon} label={item.label} />
 			{/each}
 		</div>
 	</div>
@@ -147,15 +137,7 @@
 		<SectionTitle title={home.clips.title} />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 			{#each home.clips.items as clip (clip.title)}
-				<div class="overflow-hidden rounded-lg bg-white shadow-sm">
-					<img src={clip.src} alt={clip.title} class="h-48 w-full object-cover" />
-					<div class="p-4">
-						<p class="text-xs text-gray-400">{clip.year}</p>
-						<h4 class="mt-1 font-bold text-gray-800">{clip.title}</h4>
-						<p class="mt-2 text-sm text-gray-600">{clip.desc}</p>
-						<a href={resolve('/wdmc')} class="mt-3 inline-block text-xs font-bold text-orange-600 hover:underline">MORE</a>
-					</div>
-				</div>
+				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} />
 			{/each}
 		</div>
 	</div>

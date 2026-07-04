@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import PageBanner from '$lib/components/PageBanner.svelte';
 	import { contact, site, asset } from '$lib/data/site';
 	let agreed = $state(false);
 </script>
@@ -9,7 +10,7 @@
 	<meta name="description" content="聯絡瓦當麥可活動整合，取得活動企劃與執行服務。" />
 </svelte:head>
 
-<img src={contact.banner.src} alt={contact.banner.alt} class="h-auto w-full" />
+<PageBanner src={contact.banner.src} alt={contact.banner.alt} />
 
 <section class="py-16">
 	<div class="mx-auto max-w-7xl px-4">
