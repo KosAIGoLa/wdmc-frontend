@@ -75,6 +75,10 @@ pnpm preview
 export const prerender = true;
 ```
 
+## 畫面預覽
+
+![網站畫面預覽](screen_imgs/img.png)
+
 ## 建置優化
 
 - Vite 會自動壓縮 JS/CSS 資源。
