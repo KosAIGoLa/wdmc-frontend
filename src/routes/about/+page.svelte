@@ -18,9 +18,15 @@
 	<div class="mx-auto max-w-7xl px-4">
 		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 			{#each about.features as feature (feature.title)}
-				<div class="flex flex-col items-center text-center">
-					<img src={asset(feature.icon)} alt={feature.title} class="h-20 w-20 object-contain" />
-					<h3 class="mt-4 font-bold text-gray-800">{feature.title}</h3>
+				<div class="group flex flex-col items-center text-center">
+					<img
+						src={asset(feature.icon)}
+						alt={feature.title}
+						class="h-20 w-20 object-contain transition duration-300 group-hover:scale-110 group-hover:-rotate-3"
+					/>
+					<h3 class="mt-4 font-bold text-gray-800 transition-colors group-hover:text-orange-600">
+						{feature.title}
+					</h3>
 					{#each feature.en as line (line)}
 						<p class="text-xs uppercase tracking-wider text-gray-400">{line}</p>
 					{/each}
@@ -43,10 +49,18 @@
 	<div class="mx-auto max-w-7xl px-4">
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each about.team as member (member.name)}
-				<div class="overflow-hidden rounded-lg bg-white shadow-sm">
-					<img src={asset(member.image)} alt={member.name} class="h-64 w-full object-cover" />
+				<div
+					class="group overflow-hidden rounded-lg bg-white shadow-sm transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(17,24,39,0.14)]"
+				>
+					<img
+						src={asset(member.image)}
+						alt={member.name}
+						class="h-64 w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+					/>
 					<div class="p-4 text-center">
-						<h4 class="font-bold text-gray-800">{member.name}</h4>
+						<h4 class="font-bold text-gray-800 transition-colors group-hover:text-orange-600">
+							{member.name}
+						</h4>
 						<p class="text-xs uppercase tracking-wider text-gray-400">{member.en}</p>
 						<p class="mt-2 font-medium text-orange-600">{member.role}</p>
 						<p class="mt-1 text-sm text-gray-600">{member.edu}</p>
@@ -54,7 +68,11 @@
 							<p class="mt-1 text-sm text-gray-500">{member.ext}</p>
 						{/if}
 						{#if member.email}
-							<a href="mailto:{member.email}" class="mt-1 text-sm text-gray-500 hover:text-orange-600">{member.email}</a>
+							<a
+								href="mailto:{member.email}"
+								class="mt-1 text-sm text-gray-500 transition hover:text-orange-600 hover:underline"
+								>{member.email}</a
+							>
 						{/if}
 					</div>
 				</div>
@@ -69,8 +87,14 @@
 		<SectionTitle title={$t('pages.about.envTitle')} />
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			{#each about.environment.images as img (img)}
-				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt={$t('pages.about.photoCaption')} class="h-48 w-full object-cover" />
+				<div
+					class="group overflow-hidden rounded-lg bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+				>
+					<img
+						src={asset(img)}
+						alt={$t('pages.about.photoCaption')}
+						class="h-48 w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+					/>
 					<p class="mt-2 text-center text-sm text-gray-600">{$t('pages.about.photoCaption')}</p>
 				</div>
 			{/each}
@@ -81,6 +105,14 @@
 
 <!-- CTA -->
 <section class="py-16 text-center">
-	<img src={asset('graphic.png', true)} alt="" class="mx-auto mb-6 h-24 w-auto" />
-	<a href={resolve('/contact')} class="text-lg font-bold text-orange-600 hover:underline">{$t('pages.about.cta')}</a>
+	<img
+		src={asset('graphic.png', true)}
+		alt=""
+		class="mx-auto mb-6 h-24 w-auto transition hover:scale-105"
+	/>
+	<a
+		href={resolve('/contact')}
+		class="inline-block rounded-full border border-orange-600 px-6 py-3 text-lg font-bold text-orange-600 transition hover:-translate-y-0.5 hover:bg-orange-600 hover:text-white hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+		>{$t('pages.about.cta')}</a
+	>
 </section>

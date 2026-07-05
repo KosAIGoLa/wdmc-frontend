@@ -37,8 +37,14 @@
 		<SectionTitle title={$t('pages.community.galleryTitle')} />
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			{#each services.community.gallery as img (img)}
-				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt={$t('pages.community.caseAlt')} class="h-48 w-full object-cover" />
+				<div
+					class="group overflow-hidden rounded-lg shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+				>
+					<img
+						src={asset(img)}
+						alt={$t('pages.community.caseAlt')}
+						class="h-48 w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+					/>
 				</div>
 			{/each}
 		</div>
@@ -49,6 +55,10 @@
 	<div class="mx-auto max-w-2xl px-4">
 		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.community.ctaTitle')}</h2>
 		<p class="mt-2 text-gray-600">{$t('pages.community.ctaSubtitle')}</p>
-		<a href={resolve('/contact')} class="mt-6 inline-block rounded bg-orange-600 px-8 py-3 font-bold text-white transition hover:bg-orange-700">{$t('pages.community.contactBtn')}</a>
+		<a
+			href={resolve('/contact')}
+			class="mt-6 inline-block rounded-full bg-orange-600 px-8 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+			>{$t('pages.community.contactBtn')}</a
+		>
 	</div>
 </section>

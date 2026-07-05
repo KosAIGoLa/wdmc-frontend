@@ -39,7 +39,11 @@
 			{$t('pages.activity.recordingDesc')}
 		</p>
 		<div class="mt-8">
-			<a href={resolve('/contact')} class="inline-block rounded bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700">{$t('pages.activity.contactBtn')}</a>
+			<a
+				href={resolve('/contact')}
+				class="inline-block rounded-full bg-orange-600 px-6 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+				>{$t('pages.activity.contactBtn')}</a
+			>
 		</div>
 	</div>
 </section>

@@ -27,10 +27,17 @@
 	}
 </script>
 
-<header class="sticky top-0 z-50 bg-white shadow-sm">
+<header class="sticky top-0 z-50 bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">
 	<div class="flex items-center justify-between px-4 py-4 lg:px-6 lg:py-6 xl:px-[88px]">
-		<a href={resolve('/')} class="flex items-center">
-			<img src={asset('logo.png', true)} alt={site.name} class="w-[140px] md:w-[160px] lg:w-[200px] xl:w-[240px]" />
+		<a
+			href={resolve('/')}
+			class="flex items-center rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500"
+		>
+			<img
+				src={asset('logo.png', true)}
+				alt={site.name}
+				class="w-[140px] transition duration-300 hover:scale-[1.02] md:w-[160px] lg:w-[200px] xl:w-[240px]"
+			/>
 		</a>
 
 		<!-- Desktop nav -->
@@ -44,27 +51,39 @@
 						onmouseleave={closeServices}
 					>
 						<button
-							class="flex items-center gap-1 py-2 text-[15.5px] transition-colors {isParentActive(item)
+							class="relative flex items-center gap-1 py-2 text-[15.5px] transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#E5554A] after:transition-transform hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 {isParentActive(
+								item
+							)
 								? 'text-[#E5554A]'
 								: 'text-[#302D2C] hover:text-[#E5554A]'}"
 						>
 							{#if isParentActive(item)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}
-							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<svg
+								class="h-4 w-4"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								viewBox="0 0 24 24"
+							>
 								<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
 							</svg>
 						</button>
 						{#if servicesOpen}
-							<div class="absolute left-0 top-full -mt-2 min-w-[200px] bg-white px-3 py-2 shadow-[0_0_12px_rgba(0,0,0,0.09)]">
+							<div
+								class="absolute left-0 top-full -mt-2 min-w-[200px] rounded-md bg-white px-3 py-2 shadow-[0_14px_30px_rgba(17,24,39,0.14)]"
+							>
 								{#each item.children as child (child.href)}
 									<a
 										href={child.href}
-										class="block whitespace-nowrap py-1 pl-6 pr-0 text-[15.5px] text-[#302D2C] hover:text-[#E5554A] {isActive(
+										class="block whitespace-nowrap rounded px-3 py-2 text-[15.5px] text-[#302D2C] transition hover:bg-orange-50 hover:text-[#E5554A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 {isActive(
 											child.href
 										)
 											? 'text-[#E5554A]'
 											: ''}"
 									>
-										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + child.key)}
+										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{$t(
+											'nav.' + child.key
+										)}
 									</a>
 								{/each}
 							</div>
@@ -73,7 +92,9 @@
 				{:else}
 					<a
 						href={item.href}
-						class="py-2 text-[15.5px] transition-colors {isActive(item.href)
+						class="relative py-2 text-[15.5px] transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#E5554A] after:transition-transform hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 {isActive(
+							item.href
+						)
 							? 'text-[#E5554A]'
 							: 'text-[#302D2C] hover:text-[#E5554A]'}"
 					>
@@ -85,7 +106,7 @@
 
 		<!-- Mobile toggle -->
 		<button
-			class="p-2 text-[#302D2C] lg:hidden"
+			class="rounded-full p-2 text-[#302D2C] transition hover:bg-orange-50 hover:text-[#E5554A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 lg:hidden"
 			onclick={() => (mobileOpen = !mobileOpen)}
 			aria-label="Toggle menu"
 		>
@@ -109,13 +130,21 @@
 				{#if item.children}
 					<div class="py-2">
 						<button
-							class="flex w-full items-center justify-between py-2 text-[15.5px] transition-colors {isParentActive(item)
+							class="flex w-full items-center justify-between rounded-l-full px-3 py-2 text-[15.5px] transition {isParentActive(
+								item
+							)
 								? 'text-[#E5554A]'
-								: 'text-[#302D2C]'}"
+								: 'text-[#302D2C] hover:bg-orange-50 hover:text-[#E5554A]'}"
 							onclick={() => (servicesOpen = !servicesOpen)}
 						>
 							{#if isParentActive(item)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}
-							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<svg
+								class="h-4 w-4"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								viewBox="0 0 24 24"
+							>
 								<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
 							</svg>
 						</button>
@@ -124,10 +153,12 @@
 								{#each item.children as child (child.href)}
 									<a
 										href={child.href}
-										class="block py-2 text-[15.5px] text-[#302D2C] hover:text-[#E5554A]"
+										class="block rounded-l-full px-3 py-2 text-[15.5px] text-[#302D2C] transition hover:bg-orange-50 hover:text-[#E5554A]"
 										onclick={() => (mobileOpen = false)}
 									>
-										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + child.key)}
+										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{$t(
+											'nav.' + child.key
+										)}
 									</a>
 								{/each}
 							</div>
@@ -136,9 +167,9 @@
 				{:else}
 					<a
 						href={item.href}
-						class="block py-2 text-[15.5px] transition-colors {isActive(item.href)
+						class="block rounded-l-full px-3 py-2 text-[15.5px] transition {isActive(item.href)
 							? 'text-[#E5554A]'
-							: 'text-[#302D2C] hover:text-[#E5554A]'}"
+							: 'text-[#302D2C] hover:bg-orange-50 hover:text-[#E5554A]'}"
 						onclick={() => (mobileOpen = false)}
 					>
 						{#if isActive(item.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}

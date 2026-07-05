@@ -13,9 +13,15 @@
 	const yellow = $derived(index === 1 || index === 2);
 </script>
 
-<article class="grid min-h-[250px] overflow-hidden bg-white md:grid-cols-2">
+<article class="group grid min-h-[250px] overflow-hidden bg-white md:grid-cols-2">
 	{#if imageFirst}
-		<img {src} alt={title} class="h-[250px] w-full object-cover" />
+		<div class="overflow-hidden">
+			<img
+				{src}
+				alt={title}
+				class="h-[250px] w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+			/>
+		</div>
 	{/if}
 
 	<div
@@ -38,11 +44,17 @@
 				: 'text-[#67b8de]'}"
 		>
 			<span>MORE</span>
-			<span aria-hidden="true">›</span>
+			<span class="transition duration-300 group-hover:translate-x-1" aria-hidden="true">›</span>
 		</div>
 	</div>
 
 	{#if !imageFirst}
-		<img {src} alt={title} class="h-[250px] w-full object-cover" />
+		<div class="overflow-hidden">
+			<img
+				{src}
+				alt={title}
+				class="h-[250px] w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+			/>
+		</div>
 	{/if}
 </article>

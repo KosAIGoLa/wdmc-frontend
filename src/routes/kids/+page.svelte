@@ -24,13 +24,22 @@
 		<SectionTitle title={$t('pages.kids.sectionTitle')} />
 		<div class="grid gap-6 sm:grid-cols-3">
 			{#each services.kids.courses as course (course)}
-				<div class="rounded-lg bg-white p-8 text-center shadow-sm">
-					<h3 class="text-xl font-bold text-gray-800">{course}</h3>
+				<div
+					class="group rounded-lg bg-white p-8 text-center shadow-sm transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(17,24,39,0.12)]"
+				>
+					<h3 class="text-xl font-bold text-gray-800 transition-colors group-hover:text-orange-600">
+						{course}
+					</h3>
 				</div>
 			{/each}
 		</div>
 		<div class="mt-8 text-center">
-			<a href={services.kids.booking} target="_blank" rel="noopener external" class="inline-block rounded bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700">
+			<a
+				href={services.kids.booking}
+				target="_blank"
+				rel="noopener external"
+				class="inline-block rounded-full bg-orange-600 px-6 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+			>
 				{$t('pages.kids.bookingBtn')}
 			</a>
 		</div>

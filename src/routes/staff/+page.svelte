@@ -18,9 +18,18 @@
 		<h2 class="text-3xl font-bold text-gray-800">{$t('pages.staff.sectionTitleSuffix')}</h2>
 		<img src={asset('deco.png', true)} alt="" class="mx-auto mt-4 h-4 w-auto" />
 		<p class="mt-6 leading-relaxed text-gray-600">{staff.description}</p>
-		<img src={asset('graphic.png', true)} alt="" class="mx-auto mt-8 h-24 w-auto" />
+		<img
+			src={asset('graphic.png', true)}
+			alt=""
+			class="mx-auto mt-8 h-24 w-auto transition hover:scale-105"
+		/>
 		<div class="mt-8">
-			<a href={staff.form} target="_blank" rel="noopener external" class="inline-block rounded bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700">
+			<a
+				href={staff.form}
+				target="_blank"
+				rel="noopener external"
+				class="inline-block rounded-full bg-orange-600 px-6 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+			>
 				{$t('pages.staff.joinBtn')}
 			</a>
 		</div>

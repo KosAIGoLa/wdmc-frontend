@@ -25,14 +25,16 @@
 			{#each home.brands as brand (brand.href)}
 				<a
 					href={brand.href}
-					class="group flex flex-col items-center rounded-lg bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+					class="group flex flex-col items-center rounded-lg bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(17,24,39,0.12)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500"
 				>
-					<h3 class="text-lg font-bold text-gray-800">{brand.name}</h3>
+					<h3 class="text-lg font-bold text-gray-800 transition-colors group-hover:text-orange-600">
+						{brand.name}
+					</h3>
 					<p class="mt-1 text-xs uppercase tracking-wider text-gray-500">{brand.en}</p>
 					<img
 						src={asset(brand.logo)}
 						alt={brand.name}
-						class="mt-4 h-20 w-20 rounded-full object-cover transition group-hover:scale-105"
+						class="mt-4 h-20 w-20 rounded-full object-cover transition duration-500 ease-out group-hover:scale-110"
 					/>
 				</a>
 			{/each}
@@ -61,15 +63,19 @@
 			{/each}
 		</div>
 		<div class="mt-10 flex justify-center">
-			<a href={resolve('/wdmc')} class="text-sm font-bold text-orange-600 hover:underline"
+			<a
+				href={resolve('/wdmc')}
+				class="rounded-full border border-orange-600 px-5 py-2 text-sm font-bold text-orange-600 transition hover:-translate-y-0.5 hover:bg-orange-600 hover:text-white hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
 				>{$t('pages.home.more')}</a
 			>
 		</div>
-		<div class="mt-8 overflow-hidden rounded-xl">
+		<div
+			class="mt-8 overflow-hidden rounded-xl shadow-sm transition duration-300 hover:shadow-[0_16px_34px_rgba(17,24,39,0.14)]"
+		>
 			<img
 				src={home.marketing.overlay.src}
 				alt={home.marketing.overlay.alt}
-				class="h-auto w-full object-cover"
+				class="h-auto w-full object-cover transition duration-700 ease-out hover:scale-[1.03]"
 			/>
 		</div>
 	</div>
@@ -79,8 +85,11 @@
 <section class="py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<div class="mb-8 flex flex-col items-center justify-center gap-4 md:flex-row">
-			<img src={asset('index-deco2.png')} alt="" class="h-16 w-auto" />
-			<a href={resolve('/wdmc#act-item')}>
+			<img src={asset('index-deco2.png')} alt="" class="h-16 w-auto transition hover:scale-105" />
+			<a
+				href={resolve('/wdmc#act-item')}
+				class="rounded-sm transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+			>
 				<img src={asset('index-deco3.png')} alt="" class="h-16 w-auto" />
 			</a>
 		</div>
@@ -129,12 +138,20 @@
 					href={home.kids.booking}
 					target="_blank"
 					rel="noopener external"
-					class="inline-block text-sm font-bold text-orange-600 hover:underline"
+					class="inline-block rounded-full border border-orange-600 px-5 py-2 text-sm font-bold text-orange-600 transition hover:-translate-y-0.5 hover:bg-orange-600 hover:text-white hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
 				>
 					{$t('pages.home.bookingBtn')}
 				</a>
 			</div>
-			<img src={home.kids.image.src} alt={home.kids.image.alt} class="rounded-lg shadow-sm" />
+			<div
+				class="overflow-hidden rounded-lg shadow-sm transition duration-300 hover:shadow-[0_16px_34px_rgba(17,24,39,0.14)]"
+			>
+				<img
+					src={home.kids.image.src}
+					alt={home.kids.image.alt}
+					class="transition duration-700 ease-out hover:scale-[1.03]"
+				/>
+			</div>
 		</div>
 	</div>
 </section>

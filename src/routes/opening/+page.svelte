@@ -29,7 +29,15 @@
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<div class="grid items-center gap-8 lg:grid-cols-2">
-			<img src={services.opening.aboutImage} alt={$t('nav.opening')} class="rounded-lg shadow-sm" />
+			<div
+				class="overflow-hidden rounded-lg shadow-sm transition duration-300 hover:shadow-[0_16px_34px_rgba(17,24,39,0.14)]"
+			>
+				<img
+					src={services.opening.aboutImage}
+					alt={$t('nav.opening')}
+					class="transition duration-700 ease-out hover:scale-[1.03]"
+				/>
+			</div>
 			<div>
 				<h2 class="text-2xl font-bold text-gray-800">{$t('pages.opening.customTitle')}</h2>
 				<div class="mt-6 grid gap-4 sm:grid-cols-2">
@@ -47,8 +55,14 @@
 		<SectionTitle title={$t('pages.opening.sectionTitle')} />
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 			{#each services.opening.gallery as img (img)}
-				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt={$t('pages.opening.caseAlt')} class="h-48 w-full object-cover" />
+				<div
+					class="group overflow-hidden rounded-lg shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+				>
+					<img
+						src={asset(img)}
+						alt={$t('pages.opening.caseAlt')}
+						class="h-48 w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+					/>
 				</div>
 			{/each}
 		</div>
@@ -59,6 +73,10 @@
 	<div class="mx-auto max-w-2xl px-4">
 		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.opening.ctaTitle')}</h2>
 		<p class="mt-2 text-gray-600">{$t('pages.opening.ctaSubtitle')}</p>
-		<a href={resolve('/contact')} class="mt-6 inline-block rounded bg-orange-600 px-8 py-3 font-bold text-white transition hover:bg-orange-700">{$t('pages.opening.contactBtn')}</a>
+		<a
+			href={resolve('/contact')}
+			class="mt-6 inline-block rounded-full bg-orange-600 px-8 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+			>{$t('pages.opening.contactBtn')}</a
+		>
 	</div>
 </section>

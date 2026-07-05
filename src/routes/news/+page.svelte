@@ -30,14 +30,18 @@
 		<div class="grid gap-6 md:grid-cols-2">
 			{#each visibleItems as item (item.id)}
 				<article
-					class="min-h-[214px] rounded-[18px] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.08)] transition-shadow duration-300 hover:shadow-[0_16px_38px_rgba(17,24,39,0.16)]"
+					class="group min-h-[214px] rounded-[18px] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.08)] transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(17,24,39,0.16)]"
 				>
 					<div class="flex h-full gap-5">
 						<a
 							href={resolve(`/news/${item.id}`)}
 							class="block h-[120px] w-[120px] shrink-0 overflow-hidden rounded-lg bg-gray-100 sm:h-[126px] sm:w-[126px]"
 						>
-							<img src={asset(item.image)} alt={item.title} class="h-full w-full object-cover" />
+							<img
+								src={asset(item.image)}
+								alt={item.title}
+								class="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-110"
+							/>
 						</a>
 						<div class="flex min-w-0 flex-1 flex-col">
 							<div class="flex items-start justify-between gap-4">
@@ -55,7 +59,7 @@
 							>
 								<span>SEE MORE</span>
 								<span
-									class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa72a] text-white shadow-[0_6px_14px_rgba(255,167,42,0.26)]"
+									class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffa72a] text-white shadow-[0_6px_14px_rgba(255,167,42,0.26)] transition duration-300 group-hover:translate-x-1 group-hover:scale-105"
 									aria-hidden="true"
 								>
 									<svg
@@ -84,7 +88,7 @@
 				type="button"
 				onclick={() => setPage(currentPage - 1)}
 				disabled={currentPage === 1}
-				class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-sm font-bold text-gray-700 transition hover:border-orange-600 hover:text-orange-600 disabled:pointer-events-none disabled:opacity-40"
+				class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-sm font-bold text-gray-700 transition hover:-translate-y-0.5 hover:border-orange-600 hover:text-orange-600 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 disabled:pointer-events-none disabled:opacity-40"
 				aria-label="Previous page"
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -96,7 +100,7 @@
 					<button
 						type="button"
 						onclick={() => setPage(page)}
-						class="flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold transition {page ===
+						class="flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 {page ===
 						currentPage
 							? 'border-orange-600 bg-orange-600 text-white'
 							: 'border-gray-300 text-gray-700 hover:border-orange-600 hover:text-orange-600'}"
@@ -110,7 +114,7 @@
 				type="button"
 				onclick={() => setPage(currentPage + 1)}
 				disabled={currentPage === totalPages}
-				class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-sm font-bold text-gray-700 transition hover:border-orange-600 hover:text-orange-600 disabled:pointer-events-none disabled:opacity-40"
+				class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-sm font-bold text-gray-700 transition hover:-translate-y-0.5 hover:border-orange-600 hover:text-orange-600 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 disabled:pointer-events-none disabled:opacity-40"
 				aria-label="Next page"
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

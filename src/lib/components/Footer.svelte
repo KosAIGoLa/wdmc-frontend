@@ -6,12 +6,14 @@
 
 <footer class="bg-[#df4059] text-center text-white" id="footer">
 	<div class="relative h-[120px] bg-white">
-		<img
-			src={asset('footer-logo.png', true)}
-			alt=""
-			class="pointer-events-none absolute bottom-[-75px] left-1/2 z-10 h-[150px] w-[150px] -translate-x-1/2 object-contain"
-			aria-hidden="true"
-		/>
+		<div class="absolute bottom-[-75px] left-1/2 z-10 h-[150px] w-[150px] -translate-x-1/2">
+			<img
+				src={asset('footer-logo.png', true)}
+				alt=""
+				class="footer-mark h-full w-full cursor-pointer object-contain"
+				aria-hidden="true"
+			/>
+		</div>
 	</div>
 
 	<div class="px-4 pb-6 pt-[176px]">
@@ -65,3 +67,22 @@
 		</div>
 	</div>
 </footer>
+
+<style>
+	.footer-mark:hover {
+		animation: footer-mark-sway 0.7s ease-in-out infinite;
+	}
+
+	@keyframes footer-mark-sway {
+		0%,
+		100% {
+			transform: rotate(0deg) scale(1.05);
+		}
+		25% {
+			transform: rotate(-5deg) scale(1.05);
+		}
+		75% {
+			transform: rotate(5deg) scale(1.05);
+		}
+	}
+</style>

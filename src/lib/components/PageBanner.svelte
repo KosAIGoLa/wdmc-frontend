@@ -7,4 +7,6 @@
 	let { src, alt }: Props = $props();
 </script>
 
-<img src={src} alt={alt} class="h-auto w-full" />
+<div class="overflow-hidden">
+	<img {src} {alt} class="h-auto w-full transition duration-[1200ms] ease-out hover:scale-[1.02]" />
+</div>
