@@ -5,12 +5,13 @@
 	import ActivityCard from '$lib/components/ActivityCard.svelte';
 	import ClipCard from '$lib/components/ClipCard.svelte';
 	import { resolve } from '$app/paths';
-	import { home, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { home, asset } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>{site.name}</title>
-	<meta name="description" content={site.tagline} />
+	<title>{$t('site.name')}</title>
+	<meta name="description" content={$t('site.tagline')} />
 </svelte:head>
 
 <!-- Banner -->
@@ -19,7 +20,7 @@
 <!-- Brands -->
 <section class="bg-[#f8f5f2] py-12" id="services">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="用心服務、創造更多的成功活動" subtitle="Event integrated marketing" />
+		<SectionTitle title={$t('pages.home.brandsTitle')} subtitle="Event integrated marketing" />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 			{#each home.brands as brand (brand.href)}
 				<a
@@ -60,7 +61,9 @@
 			{/each}
 		</div>
 		<div class="mt-10 flex justify-center">
-			<a href={resolve('/wdmc')} class="text-sm font-bold text-orange-600 hover:underline">MORE |</a>
+			<a href={resolve('/wdmc')} class="text-sm font-bold text-orange-600 hover:underline"
+				>{$t('pages.home.more')}</a
+			>
 		</div>
 		<div class="mt-8 overflow-hidden rounded-xl">
 			<img
@@ -122,8 +125,13 @@
 						<li>{course}</li>
 					{/each}
 				</ul>
-				<a href={home.kids.booking} target="_blank" rel="noopener external" class="inline-block text-sm font-bold text-orange-600 hover:underline">
-					線上預約 |
+				<a
+					href={home.kids.booking}
+					target="_blank"
+					rel="noopener external"
+					class="inline-block text-sm font-bold text-orange-600 hover:underline"
+				>
+					{$t('pages.home.bookingBtn')}
 				</a>
 			</div>
 			<img src={home.kids.image.src} alt={home.kids.image.alt} class="rounded-lg shadow-sm" />
@@ -135,9 +143,9 @@
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<SectionTitle title={home.clips.title} />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			{#each home.clips.items as clip (clip.title)}
-				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} />
+		<div class="grid overflow-hidden md:grid-cols-2">
+			{#each home.clips.items as clip, index (clip.title)}
+				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} {index} />
 			{/each}
 		</div>
 	</div>

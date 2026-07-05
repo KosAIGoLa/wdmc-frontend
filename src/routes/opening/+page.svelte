@@ -3,11 +3,12 @@
 	import PageBanner from '$lib/components/PageBanner.svelte';
 	import ListCard from '$lib/components/ListCard.svelte';
 	import { resolve } from '$app/paths';
-	import { services, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { services, asset } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>開工動土｜開幕剪綵 | {site.name}</title>
+	<title>{$t('nav.opening')} | {$t('site.name')}</title>
 	<meta name="description" content={services.opening.title} />
 </svelte:head>
 
@@ -28,9 +29,9 @@
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<div class="grid items-center gap-8 lg:grid-cols-2">
-			<img src={services.opening.aboutImage} alt="開工動土活動企劃" class="rounded-lg shadow-sm" />
+			<img src={services.opening.aboutImage} alt={$t('nav.opening')} class="rounded-lg shadow-sm" />
 			<div>
-				<h2 class="text-2xl font-bold text-gray-800">開工剪綵典禮活動內容</h2>
+				<h2 class="text-2xl font-bold text-gray-800">{$t('pages.opening.customTitle')}</h2>
 				<div class="mt-6 grid gap-4 sm:grid-cols-2">
 					{#each services.opening.sections[0].items as item (item.title)}
 						<ListCard title={item.title} points={item.points} compact />
@@ -43,11 +44,11 @@
 
 <section class="py-16" id="performance">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="成功案例" />
+		<SectionTitle title={$t('pages.opening.sectionTitle')} />
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 			{#each services.opening.gallery as img (img)}
 				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt="成功案例" class="h-48 w-full object-cover" />
+					<img src={asset(img)} alt={$t('pages.opening.caseAlt')} class="h-48 w-full object-cover" />
 				</div>
 			{/each}
 		</div>
@@ -56,8 +57,8 @@
 
 <section class="bg-[#f8f5f2] py-16 text-center">
 	<div class="mx-auto max-w-2xl px-4">
-		<h2 class="text-2xl font-bold text-gray-800">立刻洽詢我們！</h2>
-		<p class="mt-2 text-gray-600">索取開工動土｜開幕剪綵企劃書</p>
-		<a href={resolve('/contact')} class="mt-6 inline-block rounded bg-orange-600 px-8 py-3 font-bold text-white transition hover:bg-orange-700">聯絡我們</a>
+		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.opening.ctaTitle')}</h2>
+		<p class="mt-2 text-gray-600">{$t('pages.opening.ctaSubtitle')}</p>
+		<a href={resolve('/contact')} class="mt-6 inline-block rounded bg-orange-600 px-8 py-3 font-bold text-white transition hover:bg-orange-700">{$t('pages.opening.contactBtn')}</a>
 	</div>
 </section>

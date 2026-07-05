@@ -21,26 +21,26 @@ export const site = {
 	maps: 'https://goo.gl/maps/pWCX2JpmBzaJeFK6A'
 };
 
-export type NavItem = { label: string; href: string; children?: NavItem[] };
+export type NavItem = { key: string; href: string; children?: NavItem[] };
 
 export const navItems: NavItem[] = [
-	{ label: '關於我們', href: '/about' },
-	{ label: '案例分享', href: '/news' },
+	{ key: 'about', href: '/about' },
+	{ key: 'news', href: '/news' },
 	{
-		label: '服務項目',
+		key: 'services',
 		href: '/#services',
 		children: [
-			{ label: '瓦當活動企劃', href: '/wdmc' },
-			{ label: '開工動土｜開幕剪綵', href: '/opening' },
-			{ label: '尾牙春酒專案', href: '/active' }
+			{ key: 'wdmc', href: '/wdmc' },
+			{ key: 'opening', href: '/opening' },
+			{ key: 'active', href: '/active' }
 		]
 	},
-	{ label: '勢爵影視', href: '/activity' },
-	{ label: '童樂會', href: '/kids' },
-	{ label: '表演娛樂', href: '/talent' },
-	{ label: '硬體搭建', href: '/community' },
-	{ label: '聯絡我們', href: '/contact' },
-	{ label: '培訓活動工作人員', href: '/staff' }
+	{ key: 'activity', href: '/activity' },
+	{ key: 'kids', href: '/kids' },
+	{ key: 'talent', href: '/talent' },
+	{ key: 'community', href: '/community' },
+	{ key: 'contact', href: '/contact' },
+	{ key: 'staff', href: '/staff' }
 ];
 
 export const home = {

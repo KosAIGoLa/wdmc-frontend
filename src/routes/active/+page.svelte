@@ -3,11 +3,12 @@
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
 	import ListCard from '$lib/components/ListCard.svelte';
 	import { resolve } from '$app/paths';
-	import { services, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { services, asset } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>尾牙春酒專案 | {site.name}</title>
+	<title>{$t('nav.active')} | {$t('site.name')}</title>
 	<meta name="description" content={services.active.title} />
 </svelte:head>
 
@@ -28,9 +29,9 @@
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
 		<div class="grid items-center gap-8 lg:grid-cols-2">
-			<img src={services.active.aboutImage} alt="尾牙春酒專案" class="rounded-lg shadow-sm" />
+			<img src={services.active.aboutImage} alt={$t('nav.active')} class="rounded-lg shadow-sm" />
 			<div>
-				<h2 class="text-2xl font-bold text-gray-800">客製化尾牙春酒活動內容</h2>
+				<h2 class="text-2xl font-bold text-gray-800">{$t('pages.active.customTitle')}</h2>
 				<div class="mt-6 grid gap-4 sm:grid-cols-2">
 					{#each services.active.items as item (item.title)}
 						<ListCard title={item.title} points={item.points} compact />
@@ -43,11 +44,11 @@
 
 <section class="py-16" id="performance">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="尾牙春酒 | 表演" />
+		<SectionTitle title={$t('pages.active.sectionTitle')} />
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			{#each services.active.performance as img (img)}
 				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt="成功案例" class="h-48 w-full object-cover" />
+					<img src={asset(img)} alt={$t('pages.active.caseAlt')} class="h-48 w-full object-cover" />
 				</div>
 			{/each}
 		</div>
@@ -59,7 +60,7 @@
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			{#each services.active.special as img (img)}
 				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt="特別企劃" class="h-48 w-full object-cover" />
+					<img src={asset(img)} alt={$t('pages.active.specialAlt')} class="h-48 w-full object-cover" />
 				</div>
 			{/each}
 		</div>
@@ -68,8 +69,8 @@
 
 <section class="py-16 text-center">
 	<div class="mx-auto max-w-2xl px-4">
-		<h2 class="text-2xl font-bold text-gray-800">立刻洽詢我們！</h2>
-		<p class="mt-2 text-gray-600">索取尾牙春酒企劃書</p>
-		<a href={resolve('/contact')} class="mt-6 inline-block rounded bg-orange-600 px-8 py-3 font-bold text-white transition hover:bg-orange-700">聯絡我們</a>
+		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.active.ctaTitle')}</h2>
+		<p class="mt-2 text-gray-600">{$t('pages.active.ctaSubtitle')}</p>
+		<a href={resolve('/contact')} class="mt-6 inline-block rounded bg-orange-600 px-8 py-3 font-bold text-white transition hover:bg-orange-700">{$t('pages.active.contactBtn')}</a>
 	</div>
 </section>

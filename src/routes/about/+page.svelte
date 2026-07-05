@@ -2,11 +2,12 @@
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
 	import PageBanner from '$lib/components/PageBanner.svelte';
 	import { resolve } from '$app/paths';
-	import { about, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { about, asset } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>關於我們 | {site.name}</title>
+	<title>{$t('nav.about')} | {$t('site.name')}</title>
 	<meta name="description" content={about.intro} />
 </svelte:head>
 
@@ -32,7 +33,7 @@
 <!-- About intro -->
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-4xl px-4 text-center">
-		<SectionTitle title="ABOUT US" />
+		<SectionTitle title={$t('pages.about.sectionTitle')} />
 		<p class="leading-relaxed text-gray-600">{about.intro}</p>
 	</div>
 </section>
@@ -65,12 +66,12 @@
 <!-- Environment -->
 <section class="bg-[#f8f5f2] py-16" id="companyevn">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="公司環境" />
+		<SectionTitle title={$t('pages.about.envTitle')} />
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			{#each about.environment.images as img (img)}
 				<div class="overflow-hidden rounded-lg">
-					<img src={asset(img)} alt="辦公環境照片" class="h-48 w-full object-cover" />
-					<p class="mt-2 text-center text-sm text-gray-600">辦公環境照片</p>
+					<img src={asset(img)} alt={$t('pages.about.photoCaption')} class="h-48 w-full object-cover" />
+					<p class="mt-2 text-center text-sm text-gray-600">{$t('pages.about.photoCaption')}</p>
 				</div>
 			{/each}
 		</div>
@@ -81,5 +82,5 @@
 <!-- CTA -->
 <section class="py-16 text-center">
 	<img src={asset('graphic.png', true)} alt="" class="mx-auto mb-6 h-24 w-auto" />
-	<a href={resolve('/contact')} class="text-lg font-bold text-orange-600 hover:underline">聯絡我們 |</a>
+	<a href={resolve('/contact')} class="text-lg font-bold text-orange-600 hover:underline">{$t('pages.about.cta')}</a>
 </section>

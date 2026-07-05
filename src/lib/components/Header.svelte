@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import { navItems, site, asset } from '$lib/data/site';
 	import type { NavItem } from '$lib/data/site';
+	import { t } from '$lib/i18n';
 	import { slide } from 'svelte/transition';
 
 	let mobileOpen = $state(false);
@@ -47,7 +48,7 @@
 								? 'text-[#E5554A]'
 								: 'text-[#302D2C] hover:text-[#E5554A]'}"
 						>
-							{#if isParentActive(item)}<span class="mr-1.5">•</span>{/if}{item.label}
+							{#if isParentActive(item)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}
 							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
 							</svg>
@@ -63,7 +64,7 @@
 											? 'text-[#E5554A]'
 											: ''}"
 									>
-										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{child.label}
+										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + child.key)}
 									</a>
 								{/each}
 							</div>
@@ -76,7 +77,7 @@
 							? 'text-[#E5554A]'
 							: 'text-[#302D2C] hover:text-[#E5554A]'}"
 					>
-						{#if isActive(item.href)}<span class="mr-1.5">•</span>{/if}{item.label}
+						{#if isActive(item.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}
 					</a>
 				{/if}
 			{/each}
@@ -113,7 +114,7 @@
 								: 'text-[#302D2C]'}"
 							onclick={() => (servicesOpen = !servicesOpen)}
 						>
-							{#if isParentActive(item)}<span class="mr-1.5">•</span>{/if}{item.label}
+							{#if isParentActive(item)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}
 							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
 							</svg>
@@ -126,7 +127,7 @@
 										class="block py-2 text-[15.5px] text-[#302D2C] hover:text-[#E5554A]"
 										onclick={() => (mobileOpen = false)}
 									>
-										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{child.label}
+										{#if isActive(child.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + child.key)}
 									</a>
 								{/each}
 							</div>
@@ -140,7 +141,7 @@
 							: 'text-[#302D2C] hover:text-[#E5554A]'}"
 						onclick={() => (mobileOpen = false)}
 					>
-						{#if isActive(item.href)}<span class="mr-1.5">•</span>{/if}{item.label}
+						{#if isActive(item.href)}<span class="mr-1.5">•</span>{/if}{$t('nav.' + item.key)}
 					</a>
 				{/if}
 			{/each}

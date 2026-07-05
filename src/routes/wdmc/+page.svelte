@@ -5,15 +5,16 @@
 	import IconCard from '$lib/components/IconCard.svelte';
 	import ActivityCard from '$lib/components/ActivityCard.svelte';
 	import ClipCard from '$lib/components/ClipCard.svelte';
-	import { services, home, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { services, home, asset } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>瓦當活動企劃 | {site.name}</title>
+	<title>{$t('nav.wdmc')} | {$t('site.name')}</title>
 	<meta name="description" content={services.wdmc.description} />
 </svelte:head>
 
-<PageBanner src={asset('index-banner1.jpg', true)} alt="瓦當活動企劃" />
+<PageBanner src={asset('index-banner1.jpg', true)} alt={$t('nav.wdmc')} />
 
 <PageIntro
 	title={services.wdmc.title}
@@ -23,7 +24,7 @@
 
 <section class="bg-[#f8f5f2] py-16" id="case">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="活動整合行銷" />
+		<SectionTitle title={$t('pages.wdmc.marketingTitle')} />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each services.wdmc.items as item (item.label)}
 				<IconCard icon={item.icon} label={item.label} />
@@ -34,7 +35,7 @@
 
 <section class="py-16" id="act-item">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="精選活動特輯" />
+		<SectionTitle title={$t('pages.wdmc.featuredTitle')} />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each services.wdmc.featured as item (item.title)}
 				<ActivityCard href={item.href} src={item.src} title={item.title} />
@@ -45,10 +46,10 @@
 
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="活動剪輯" />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			{#each home.clips.items as clip (clip.title)}
-				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} />
+		<SectionTitle title={$t('pages.wdmc.clipsTitle')} />
+		<div class="grid overflow-hidden md:grid-cols-2">
+			{#each home.clips.items as clip, index (clip.title)}
+				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} {index} />
 			{/each}
 		</div>
 	</div>

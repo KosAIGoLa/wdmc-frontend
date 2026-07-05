@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
-	import { news, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { news, asset } from '$lib/data/site';
 
 	const item = $derived(news.items.find((n) => n.id === page.params.id));
 </script>
 
 <svelte:head>
-	<title>{item?.title ?? '最新消息'} | {site.name}</title>
+	<title>{item?.title ?? $t('nav.news')} | {$t('site.name')}</title>
 	<meta name="description" content={item?.desc ?? ''} />
 </svelte:head>
 
@@ -20,12 +21,12 @@
 				<h1 class="mt-2 text-2xl font-bold text-gray-800 md:text-3xl">{item.title}</h1>
 				<p class="mt-4 leading-relaxed text-gray-600">{item.desc}</p>
 				<div class="mt-8">
-					<a href={resolve('/news')} class="inline-block text-sm font-bold text-orange-600 hover:underline">← 返回案例分享</a>
+					<a href={resolve('/news')} class="inline-block text-sm font-bold text-orange-600 hover:underline">{$t('pages.news.back')}</a>
 				</div>
 			</div>
 		{:else}
-			<p class="text-center text-gray-600">找不到此消息。</p>
-			<a href={resolve('/news')} class="mt-4 block text-center text-orange-600 hover:underline">返回案例分享</a>
+			<p class="text-center text-gray-600">{$t('pages.news.notFound')}</p>
+			<a href={resolve('/news')} class="mt-4 block text-center text-orange-600 hover:underline">{$t('pages.news.backLink')}</a>
 		{/if}
 	</div>
 </section>

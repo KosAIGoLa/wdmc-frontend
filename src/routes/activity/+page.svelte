@@ -4,15 +4,16 @@
 	import PageIntro from '$lib/components/PageIntro.svelte';
 	import IconCard from '$lib/components/IconCard.svelte';
 	import { resolve } from '$app/paths';
-	import { services, asset, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { services, asset } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>勢爵影視 | {site.name}</title>
+	<title>{$t('nav.activity')} | {$t('site.name')}</title>
 	<meta name="description" content={services.activity.description} />
 </svelte:head>
 
-<PageBanner src={asset('index-banner2.jpg', true)} alt="勢爵影視" />
+<PageBanner src={asset('index-banner2.jpg', true)} alt={$t('nav.activity')} />
 
 <PageIntro
 	title={services.activity.title}
@@ -22,7 +23,7 @@
 
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="影視服務項目" />
+		<SectionTitle title={$t('pages.activity.sectionTitle')} />
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{#each services.activity.items as item (item.label)}
 				<IconCard icon={item.icon} label={item.label} />
@@ -33,12 +34,12 @@
 
 <section class="py-16">
 	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h2 class="text-2xl font-bold text-gray-800">活動紀錄與直播</h2>
+		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.activity.recordingTitle')}</h2>
 		<p class="mt-4 leading-relaxed text-gray-600">
-			勢爵影視提供專業的活動紀錄、直播技術與後製剪輯，從企業活動、記者會到大型典禮，都能完整記錄每一個精彩瞬間，並透過網路行銷與媒體平台營運，擴大活動影響力。
+			{$t('pages.activity.recordingDesc')}
 		</p>
 		<div class="mt-8">
-			<a href={resolve('/contact')} class="inline-block rounded bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700">立即洽詢</a>
+			<a href={resolve('/contact')} class="inline-block rounded bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700">{$t('pages.activity.contactBtn')}</a>
 		</div>
 	</div>
 </section>

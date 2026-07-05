@@ -2,11 +2,12 @@
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
 	import PageBanner from '$lib/components/PageBanner.svelte';
 	import PageIntro from '$lib/components/PageIntro.svelte';
-	import { services, site } from '$lib/data/site';
+	import { t } from '$lib/i18n';
+	import { services } from '$lib/data/site';
 </script>
 
 <svelte:head>
-	<title>童樂會 | {site.name}</title>
+	<title>{$t('nav.kids')} | {$t('site.name')}</title>
 	<meta name="description" content={services.kids.description} />
 </svelte:head>
 
@@ -20,7 +21,7 @@
 
 <section class="bg-[#f8f5f2] py-16">
 	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title="兒童課程" />
+		<SectionTitle title={$t('pages.kids.sectionTitle')} />
 		<div class="grid gap-6 sm:grid-cols-3">
 			{#each services.kids.courses as course (course)}
 				<div class="rounded-lg bg-white p-8 text-center shadow-sm">
@@ -30,7 +31,7 @@
 		</div>
 		<div class="mt-8 text-center">
 			<a href={services.kids.booking} target="_blank" rel="noopener external" class="inline-block rounded bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700">
-				線上預約 |
+				{$t('pages.kids.bookingBtn')}
 			</a>
 		</div>
 	</div>
@@ -38,9 +39,9 @@
 
 <section class="py-16">
 	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h2 class="text-2xl font-bold text-gray-800">親子品牌經營</h2>
+		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.kids.brandTitle')}</h2>
 		<p class="mt-4 leading-relaxed text-gray-600">
-			從課程規劃、活動執行到品牌經營，童樂會協助親子品牌打造完整體驗。我們也提供兒童抓周、親子活動等客製化服務，讓每個家庭留下美好回憶。
+			{$t('pages.kids.brandDesc')}
 		</p>
 	</div>
 </section>
