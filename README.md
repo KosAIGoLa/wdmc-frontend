@@ -69,6 +69,16 @@ pnpm preview
 
 本專案使用 `@sveltejs/adapter-static`，執行 `pnpm build` 後會產生 `build/` 目錄，可直接部署到任何靜態檔案伺服器（例如 Nginx、GitHub Pages、Cloudflare Pages 等）。
 
+### GitHub Pages 自動部署
+
+本專案已內建 GitHub Actions 工作流程（`.github/workflows/deploy.yml`）：
+
+- 每次推送 `main` 分支時自動觸發。
+- 會根據倉庫名稱自動設定 `BASE_PATH`（專案倉庫為 `/<repo>`，使用者/組織站點為 `/`）。
+- 執行 `pnpm install` 與 `pnpm build` 後，將 `build/` 目錄部署到 GitHub Pages。
+
+啟用方式：在 GitHub 倉庫的 **Settings > Pages > Source** 中選擇 **GitHub Actions**。
+
 為了符合 `adapter-static` 的要求，已在 `src/routes/+layout.ts` 設定：
 
 ```ts
