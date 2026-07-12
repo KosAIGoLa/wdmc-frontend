@@ -15,29 +15,36 @@
 
 ```
 src/
-  app.html              # HTML 入口與字體載入
+  app.html                  # HTML 入口與字體載入
+  app.d.ts                  # SvelteKit 全域型別宣告
+  html-minifier-terser.d.ts # 自訂 Vite plugin 型別宣告
   routes/
-    +layout.svelte      # 根版面（載入 layout.css）
-    +layout.ts          # 設定所有頁面 prerender = true
-    layout.css          # Tailwind 入口 + 全域字體
-    +page.svelte        # 首頁
-    about/              # 關於我們
-    active/             # 尾牙春酒專案
-    activity/           # 勢爵影視
-    community/          # 硬體搭建
-    contact/            # 聯絡我們
-    kids/               # 童樂會
-    news/               # 案例分享
-    opening/            # 開工動土｜開幕剪綵
-    privacy/            # 隱私權條款
-    staff/              # 培訓活動工作人員
-    talent/             # 表演娛樂
-    wdmc/               # 瓦當活動企劃
+    +layout.svelte          # 根版面（載入 layout.css）
+    +layout.ts              # 設定所有頁面 prerender = true
+    layout.css              # Tailwind 入口 + 全域字體
+    +page.svelte            # 首頁
+    about/                  # 關於我們
+    active/                 # 尾牙春酒專案
+    activity/               # 勢爵影視
+    community/              # 硬體搭建
+    contact/                # 聯絡我們
+    kids/                   # 童樂會
+    news/                   # 案例分享列表
+      [id]/                 # 案例詳情動態路由
+    opening/                # 開工動土｜開幕剪綵
+    privacy/                # 隱私權條款
+    staff/                  # 培訓活動工作人員
+    talent/                 # 表演娛樂
+    wdmc/                   # 瓦當活動企劃
   lib/
-    components/         # Header、Footer、FloatSidebar
-    data/site.ts        # 網站資料、導覽項目、聯絡資訊
-static/                 # 靜態資源（圖片等）
-build/                  # 靜態輸出目錄（執行 build 後產生）
+    assets/                 # 網站 favicon 等靜態資源
+    components/             # 可複用 Svelte 元件
+    content/                # 多語系頁面文案與資料（zh-TW.ts、en.ts）
+    data/site.ts            # 網站資料、導覽項目、聯絡資訊
+    i18n/                   # 國際化設定與詞彙表（zh-TW.ts、en.ts）
+    vitest-examples/        # Vitest 測試範例
+static/                     # 靜態資源（images/、robots.txt 等）
+build/                      # 靜態輸出目錄（執行 build 後產生）
 ```
 
 ## 常用指令
