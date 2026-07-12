@@ -1,100 +1,86 @@
 <script lang="ts">
-	import BannerCarousel from '$lib/components/BannerCarousel.svelte';
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
+	import BannerCarousel from '$lib/components/BannerCarousel.svelte';
 	import ListCard from '$lib/components/ListCard.svelte';
 	import { resolve } from '$app/paths';
-	import { t } from '$lib/i18n';
+	import { t, content } from '$lib/i18n';
 	import { services, asset } from '$lib/data/site';
+
+	const c = $derived($content);
+	const active = $derived(c?.services.active);
 </script>
 
 <svelte:head>
 	<title>{$t('nav.active')} | {$t('site.name')}</title>
-	<meta name="description" content={services.active.title} />
+	<meta name="description" content={active?.title ?? ''} />
 </svelte:head>
 
-<BannerCarousel banners={services.active.banners} />
+{#if active}
+	<BannerCarousel
+		banners={services.active.banners.map((b, i) => ({
+			src: b.src,
+			alt: active.bannersAlt[i] ?? ''
+		}))}
+	/>
 
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h1 class="text-2xl font-bold text-gray-800 md:text-3xl">{services.active.title}</h1>
-		<img src={asset('deco.png', true)} alt="" class="mx-auto mt-4 h-4 w-auto" />
-		<div class="mt-6 space-y-2 leading-relaxed text-gray-600">
-			{#each services.active.description as line (line)}
-				<p>{line}</p>
-			{/each}
-		</div>
-	</div>
-</section>
-
-<section class="bg-[#f8f5f2] py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<div class="grid items-center gap-8 lg:grid-cols-2">
-			<div
-				class="overflow-hidden rounded-lg shadow-sm transition duration-300 hover:shadow-[0_16px_34px_rgba(17,24,39,0.14)]"
-			>
-				<img
-					src={services.active.aboutImage}
-					alt={$t('nav.active')}
-					class="transition duration-700 ease-out hover:scale-[1.03]"
-				/>
+	<section class="section">
+		<div class="container-page max-w-4xl text-center">
+			<h1 class="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">{active.title}</h1>
+			<div class="mt-6 space-y-1 text-gray-600">
+				{#each active.description as line (line)}
+					<p>{line}</p>
+				{/each}
 			</div>
-			<div>
-				<h2 class="text-2xl font-bold text-gray-800">{$t('pages.active.customTitle')}</h2>
-				<div class="mt-6 grid gap-4 sm:grid-cols-2">
-					{#each services.active.items as item (item.title)}
-						<ListCard title={item.title} points={item.points} compact />
-					{/each}
+			<div class="card group mx-auto mt-8 max-w-2xl overflow-hidden p-0">
+				<div class="media-frame media-frame--soft">
+					<img src={services.active.aboutImage} alt={active.bannersAlt[0]} />
 				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section class="py-16" id="performance">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={$t('pages.active.sectionTitle')} />
-		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-			{#each services.active.performance as img (img)}
-				<div
-					class="group overflow-hidden rounded-lg shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-				>
-					<img
-						src={asset(img)}
-						alt={$t('pages.active.caseAlt')}
-						class="h-48 w-full object-cover transition duration-500 ease-out group-hover:scale-110"
-					/>
-				</div>
-			{/each}
+	<section class="section section-soft">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.active.customTitle')} />
+			<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+				{#each active.items as item (item.title)}
+					<ListCard title={item.title} points={[...item.points]} />
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section class="bg-[#f8f5f2] py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-			{#each services.active.special as img (img)}
-				<div
-					class="group overflow-hidden rounded-lg shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-				>
-					<img
-						src={asset(img)}
-						alt={$t('pages.active.specialAlt')}
-						class="h-48 w-full object-cover transition duration-500 ease-out group-hover:scale-110"
-					/>
-				</div>
-			{/each}
+	<section class="section" id="performance">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.active.sectionTitle')} />
+			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{#each services.active.performance as img (img)}
+					<div class="media-frame media-frame--lift group aspect-[4/3] rounded-2xl">
+						<img src={asset(img)} alt={$t('pages.active.caseAlt')} loading="lazy" />
+					</div>
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section class="py-16 text-center">
-	<div class="mx-auto max-w-2xl px-4">
-		<h2 class="text-2xl font-bold text-gray-800">{$t('pages.active.ctaTitle')}</h2>
-		<p class="mt-2 text-gray-600">{$t('pages.active.ctaSubtitle')}</p>
-		<a
-			href={resolve('/contact')}
-			class="mt-6 inline-block rounded-full bg-orange-600 px-8 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
-			>{$t('pages.active.contactBtn')}</a
-		>
-	</div>
-</section>
+	<section class="section section-soft">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.active.specialAlt')} />
+			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{#each services.active.special as img (img)}
+					<div class="media-frame media-frame--lift group aspect-[4/3] rounded-2xl">
+						<img src={asset(img)} alt={$t('pages.active.specialAlt')} loading="lazy" />
+					</div>
+				{/each}
+			</div>
+		</div>
+	</section>
+
+	<section class="section text-center">
+		<div class="container-page max-w-2xl">
+			<h2 class="text-2xl font-bold text-gray-900">{$t('pages.active.ctaTitle')}</h2>
+			<p class="mt-2 text-gray-600">{$t('pages.active.ctaSubtitle')}</p>
+			<a href={resolve('/contact')} class="btn-primary mt-6">{$t('pages.active.contactBtn')}</a>
+		</div>
+	</section>
+{/if}

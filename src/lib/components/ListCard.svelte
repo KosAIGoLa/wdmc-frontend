@@ -8,13 +8,9 @@
 	let { title, points, compact = false }: Props = $props();
 </script>
 
-<div
-	class="group rounded-lg bg-white shadow-sm transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_12px_26px_rgba(17,24,39,0.11)] {compact
-		? 'p-4'
-		: 'p-6'}"
->
+<div class="card group {compact ? 'p-4' : 'p-6'}">
 	<h4
-		class="font-bold text-gray-800 transition-colors group-hover:text-orange-600 {compact
+		class="font-bold text-gray-900 transition-colors group-hover:text-[var(--color-brand)] {compact
 			? ''
 			: 'text-lg'}"
 	>

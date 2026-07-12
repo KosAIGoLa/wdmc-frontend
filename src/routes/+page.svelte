@@ -5,165 +5,203 @@
 	import ActivityCard from '$lib/components/ActivityCard.svelte';
 	import ClipCard from '$lib/components/ClipCard.svelte';
 	import { resolve } from '$app/paths';
-	import { t } from '$lib/i18n';
+	import { t, content } from '$lib/i18n';
 	import { home, asset } from '$lib/data/site';
+
+	const c = $derived($content);
 </script>
 
 <svelte:head>
-	<title>{$t('site.name')}</title>
-	<meta name="description" content={$t('site.tagline')} />
+	<title>{c?.site.name ?? $t('site.name')}</title>
+	<meta name="description" content={c?.site.tagline ?? $t('site.tagline')} />
 </svelte:head>
 
-<!-- Banner -->
-<BannerCarousel banners={home.banners} />
+{#if c}
+	<!-- Banner -->
+	<BannerCarousel
+		banners={home.banners.map((b, i) => ({
+			src: b.src,
+			alt: c.home.banners[i] ?? ''
+		}))}
+	/>
 
-<!-- Brands -->
-<section class="bg-[#f8f5f2] py-12" id="services">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={$t('pages.home.brandsTitle')} subtitle="Event integrated marketing" />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			{#each home.brands as brand (brand.href)}
-				<a
-					href={brand.href}
-					class="group flex flex-col items-center rounded-lg bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(17,24,39,0.12)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500"
-				>
-					<h3 class="text-lg font-bold text-gray-800 transition-colors group-hover:text-orange-600">
-						{brand.name}
-					</h3>
-					<p class="mt-1 text-xs uppercase tracking-wider text-gray-500">{brand.en}</p>
-					<img
-						src={asset(brand.logo)}
-						alt={brand.name}
-						class="mt-4 h-20 w-20 rounded-full object-cover transition duration-500 ease-out group-hover:scale-110"
-					/>
-				</a>
-			{/each}
+	<!-- Brands -->
+	<section class="section section-soft" id="services">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.home.brandsTitle')} subtitle={$t('pages.home.brandsSubtitle')} />
+			<div class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+				{#each home.brands as brand, i (brand.href)}
+					<a
+						href={resolve(brand.href as '/wdmc' | '/activity' | '/kids' | '/talent')}
+						class="card group flex flex-col items-center p-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500"
+					>
+						<h3 class="text-lg font-bold text-gray-900 transition-colors group-hover:text-[var(--color-brand)]">
+							{c.home.brands[i]?.name}
+						</h3>
+						<p class="mt-1 text-xs uppercase tracking-wider text-gray-500">
+							{c.home.brands[i]?.en}
+						</p>
+						<div
+							class="media-frame mt-5 h-20 w-20 rounded-full ring-4 ring-[var(--color-surface-soft)]"
+						>
+							<img src={asset(brand.logo)} alt={c.home.brands[i]?.name} />
+						</div>
+					</a>
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<!-- Intro -->
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4 text-center">
-		<h1 class="text-3xl font-bold text-gray-800 md:text-4xl">{home.intro.title}</h1>
-		<p class="mt-3 text-lg font-medium text-orange-600">{home.intro.subtitle}</p>
-		<img src={asset('index-deco4.png')} alt="" class="mx-auto mt-6 h-16 w-auto" />
-		<p class="mt-6 leading-relaxed text-gray-600">{home.intro.description}</p>
-		<p class="mt-2 text-sm uppercase tracking-widest text-gray-400">{home.intro.enTitle}</p>
-	</div>
-</section>
-
-<!-- Marketing -->
-<section class="bg-[#f8f5f2] py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={home.marketing.title} />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each home.marketing.items as item (item.label)}
-				<IconCard icon={item.icon} label={item.label} />
-			{/each}
-		</div>
-		<div class="mt-10 flex justify-center">
-			<a
-				href={resolve('/wdmc')}
-				class="rounded-full border border-orange-600 px-5 py-2 text-sm font-bold text-orange-600 transition hover:-translate-y-0.5 hover:bg-orange-600 hover:text-white hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
-				>{$t('pages.home.more')}</a
-			>
-		</div>
-		<div
-			class="mt-8 overflow-hidden rounded-xl shadow-sm transition duration-300 hover:shadow-[0_16px_34px_rgba(17,24,39,0.14)]"
-		>
+	<!-- Intro -->
+	<section class="section">
+		<div class="container-page max-w-4xl text-center">
+			<h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">
+				{c.home.intro.title}
+			</h1>
+			<p class="mt-3 text-base font-medium text-[var(--color-brand)] sm:text-lg">
+				{c.home.intro.subtitle}
+			</p>
 			<img
-				src={home.marketing.overlay.src}
-				alt={home.marketing.overlay.alt}
-				class="h-auto w-full object-cover transition duration-700 ease-out hover:scale-[1.03]"
+				src={asset('index-deco4.png')}
+				alt=""
+				class="mx-auto mt-5 h-14 w-auto sm:mt-6 sm:h-16"
+				aria-hidden="true"
 			/>
+			<p class="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed text-gray-600 sm:mt-6 sm:text-base">
+				{c.home.intro.description}
+			</p>
+			<p class="mt-3 text-xs uppercase tracking-[0.2em] text-gray-400 sm:text-sm">
+				{c.home.intro.enTitle}
+			</p>
 		</div>
-	</div>
-</section>
+	</section>
 
-<!-- Featured activities -->
-<section class="py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<div class="mb-8 flex flex-col items-center justify-center gap-4 md:flex-row">
-			<img src={asset('index-deco2.png')} alt="" class="h-16 w-auto transition hover:scale-105" />
-			<a
-				href={resolve('/wdmc#act-item')}
-				class="rounded-sm transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
-			>
-				<img src={asset('index-deco3.png')} alt="" class="h-16 w-auto" />
-			</a>
+	<!-- Marketing -->
+	<section class="section section-soft">
+		<div class="container-page">
+			<SectionTitle title={c.home.marketing.title} />
+			<div class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+				{#each home.marketing.items as item, i (i)}
+					<IconCard icon={item.icon} label={c.home.marketing.items[i] ?? ''} />
+				{/each}
+			</div>
+			<div class="mt-10 flex justify-center">
+				<a href={resolve('/wdmc')} class="btn-outline">{$t('pages.home.more')}</a>
+			</div>
+			<div class="card group mt-8 overflow-hidden p-0">
+				<div class="media-frame media-frame--soft">
+					<img src={home.marketing.overlay.src} alt={c.home.marketing.overlayAlt} />
+				</div>
+			</div>
 		</div>
-		<SectionTitle title={home.featured.title} />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each home.featured.items as item (item.title)}
-				<ActivityCard href={item.href} src={item.src} title={item.title} />
-			{/each}
-		</div>
-	</div>
-</section>
+	</section>
 
-<!-- Media -->
-<section class="bg-[#f8f5f2] py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<div class="mb-8 text-center">
-			<h2 class="text-3xl font-bold text-gray-800">{home.media.title}</h2>
-			<p class="mt-2 text-sm font-medium text-orange-600">{home.media.subtitle}</p>
-			<img src={asset('deco.png', true)} alt="" class="mx-auto mt-4 h-4 w-auto" />
-		</div>
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each home.media.items as item (item.label)}
-				<IconCard icon={item.icon} label={item.label} />
-			{/each}
-		</div>
-	</div>
-</section>
-
-<!-- Kids -->
-<section class="py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<div class="mb-8 text-center">
-			<h2 class="text-3xl font-bold text-gray-800">{home.kids.title}</h2>
-			<p class="mt-2 text-sm font-medium text-orange-600">{home.kids.subtitle}</p>
-			<img src={asset('deco.png', true)} alt="" class="mx-auto mt-4 h-4 w-auto" />
-		</div>
-		<div class="grid items-center gap-8 md:grid-cols-2">
-			<div class="space-y-4 text-center md:text-left">
-				<h3 class="text-xl font-bold text-gray-800">{home.kids.brand}</h3>
-				<ul class="space-y-2 text-gray-600">
-					{#each home.kids.courses as course (course)}
-						<li>{course}</li>
-					{/each}
-				</ul>
+	<!-- Featured -->
+	<section class="section">
+		<div class="container-page">
+			<div class="mb-8 flex flex-col items-center justify-center gap-4 sm:mb-10 md:flex-row">
+				<img
+					src={asset('index-deco2.png')}
+					alt=""
+					class="h-14 w-auto transition hover:scale-105 sm:h-16"
+					aria-hidden="true"
+				/>
 				<a
-					href={home.kids.booking}
-					target="_blank"
-					rel="noopener external"
-					class="inline-block rounded-full border border-orange-600 px-5 py-2 text-sm font-bold text-orange-600 transition hover:-translate-y-0.5 hover:bg-orange-600 hover:text-white hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+					href={resolve('/wdmc#act-item')}
+					class="rounded-sm transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
 				>
-					{$t('pages.home.bookingBtn')}
+					<img src={asset('index-deco3.png')} alt="" class="h-14 w-auto sm:h-16" />
 				</a>
 			</div>
-			<div
-				class="overflow-hidden rounded-lg shadow-sm transition duration-300 hover:shadow-[0_16px_34px_rgba(17,24,39,0.14)]"
-			>
+			<SectionTitle title={c.home.featured.title} />
+			<div class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+				{#each home.featured.items as item, i (i)}
+					<ActivityCard
+						href={item.href}
+						src={item.src}
+						title={c.home.featured.items[i] ?? ''}
+					/>
+				{/each}
+			</div>
+		</div>
+	</section>
+
+	<!-- Media -->
+	<section class="section section-soft">
+		<div class="container-page">
+			<div class="mb-8 text-center sm:mb-10">
+				<h2 class="text-2xl font-bold text-gray-900 sm:text-3xl">{c.home.media.title}</h2>
+				<p class="mt-2 text-sm font-medium text-[var(--color-brand)]">{c.home.media.subtitle}</p>
 				<img
-					src={home.kids.image.src}
-					alt={home.kids.image.alt}
-					class="transition duration-700 ease-out hover:scale-[1.03]"
+					src={asset('deco.png', true)}
+					alt=""
+					class="mx-auto mt-4 h-3.5 w-auto sm:h-4"
+					aria-hidden="true"
 				/>
 			</div>
+			<div class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+				{#each home.media.items as item, i (i)}
+					<IconCard icon={item.icon} label={c.home.media.items[i] ?? ''} />
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<!-- Clips -->
-<section class="bg-[#f8f5f2] py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={home.clips.title} />
-		<div class="grid overflow-hidden md:grid-cols-2">
-			{#each home.clips.items as clip, index (clip.title)}
-				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} {index} />
-			{/each}
+	<!-- Kids -->
+	<section class="section">
+		<div class="container-page">
+			<div class="mb-8 text-center sm:mb-10">
+				<h2 class="text-2xl font-bold text-gray-900 sm:text-3xl">{c.home.kids.title}</h2>
+				<p class="mt-2 text-sm font-medium text-[var(--color-brand)]">{c.home.kids.subtitle}</p>
+				<img
+					src={asset('deco.png', true)}
+					alt=""
+					class="mx-auto mt-4 h-3.5 w-auto sm:h-4"
+					aria-hidden="true"
+				/>
+			</div>
+			<div class="grid items-center gap-8 md:grid-cols-2 md:gap-10">
+				<div class="space-y-4 text-center md:text-left">
+					<h3 class="text-xl font-bold text-gray-900">{c.home.kids.brand}</h3>
+					<ul class="space-y-2 text-gray-600">
+						{#each c.home.kids.courses as course (course)}
+							<li>{course}</li>
+						{/each}
+					</ul>
+					<a
+						href={home.kids.booking}
+						target="_blank"
+						rel="noopener external"
+						class="btn-outline"
+					>
+						{$t('pages.home.bookingBtn')}
+					</a>
+				</div>
+				<div class="card group overflow-hidden p-0">
+					<div class="media-frame media-frame--soft">
+						<img src={home.kids.image.src} alt={c.home.kids.imageAlt} />
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
+
+	<!-- Clips -->
+	<section class="section section-soft">
+		<div class="container-page">
+			<SectionTitle title={c.home.clips.title} />
+			<div class="overflow-hidden rounded-2xl shadow-[var(--shadow-card)] md:grid md:grid-cols-2">
+				{#each home.clips.items as clip, index (index)}
+					{@const text = c.home.clips.items[index]}
+					<ClipCard
+						src={clip.src}
+						year={text?.year ?? ''}
+						title={text?.title ?? ''}
+						desc={text?.desc ?? ''}
+						{index}
+					/>
+				{/each}
+			</div>
+		</div>
+	</section>
+{/if}

@@ -10,14 +10,16 @@
 	let { title, subtitle, light = false }: Props = $props();
 </script>
 
-<div class="group mb-8 text-center">
-	<h2 class="text-2xl font-bold tracking-wide md:text-3xl {light ? 'text-white' : 'text-gray-800'}">
+<div class="group mb-8 text-center md:mb-10">
+	<h2
+		class="text-2xl font-bold tracking-tight md:text-3xl {light ? 'text-white' : 'text-gray-900'}"
+	>
 		{title}
 	</h2>
 	{#if subtitle}
 		<p
-			class="mt-2 text-xs font-light uppercase tracking-widest {light
-				? 'text-gray-200'
+			class="mt-2 text-xs font-medium uppercase tracking-[0.18em] {light
+				? 'text-white/80'
 				: 'text-gray-500'}"
 		>
 			{subtitle}
@@ -26,6 +28,7 @@
 	<img
 		src={asset('deco.png', true)}
 		alt=""
-		class="mx-auto mt-4 h-4 w-auto transition duration-300 ease-out group-hover:scale-110"
+		class="mx-auto mt-4 h-3.5 w-auto opacity-90 transition duration-300 ease-out group-hover:scale-110 sm:h-4"
+		aria-hidden="true"
 	/>
 </div>

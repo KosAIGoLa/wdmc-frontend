@@ -1,6 +1,8 @@
 import { browser } from '$app/environment';
 import { derived, writable, type Readable } from 'svelte/store';
 import type zhTW from './zh-TW';
+import type { Content } from '$lib/content';
+import { loadContent } from '$lib/content';
 
 export type Locale = 'zh-TW' | 'en';
 
@@ -25,7 +27,16 @@ export const dictionary = derived<Readable<Locale>, typeof zhTW | undefined>(
 	undefined
 );
 
-function getValue(dict: typeof zhTW | undefined, key: string): unknown {
+/** Page/content copy extracted from data (home, about, news, …). */
+export const content = derived<Readable<Locale>, Content | undefined>(
+	locale,
+	($locale, set) => {
+		loadContent($locale).then(set);
+	},
+	undefined
+);
+
+function getValue(dict: unknown, key: string): unknown {
 	if (!dict) return undefined;
 	return key.split('.').reduce((obj: unknown, k) => {
 		if (obj && typeof obj === 'object' && k in obj) {
@@ -37,6 +48,11 @@ function getValue(dict: typeof zhTW | undefined, key: string): unknown {
 
 export const t: Readable<(key: string) => string> = derived(dictionary, ($dict) => {
 	return (key: string) => (getValue($dict, key) ?? key) as string;
+});
+
+/** Typed helper for nested dictionary values (arrays/objects). */
+export const tAny: Readable<(key: string) => unknown> = derived(dictionary, ($dict) => {
+	return (key: string) => getValue($dict, key);
 });
 
 export function setLocale(next: Locale) {

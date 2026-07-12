@@ -1,37 +1,39 @@
 <script lang="ts">
-	import SectionTitle from '$lib/components/SectionTitle.svelte';
 	import PageBanner from '$lib/components/PageBanner.svelte';
+	import { t, content } from '$lib/i18n';
 	import { staff, asset } from '$lib/data/site';
-	import { t } from '$lib/i18n';
+
+	const c = $derived($content);
 </script>
 
 <svelte:head>
 	<title>{$t('nav.staff')} | {$t('site.name')}</title>
-	<meta name="description" content={staff.description} />
+	<meta name="description" content={c?.staff.description ?? ''} />
 </svelte:head>
 
-<PageBanner src={staff.banner.src} alt={staff.banner.alt} />
+{#if c}
+	<PageBanner src={staff.banner.src} alt={c.staff.bannerAlt} />
 
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4 text-center">
-		<SectionTitle title={staff.title} />
-		<h2 class="text-3xl font-bold text-gray-800">{$t('pages.staff.sectionTitleSuffix')}</h2>
-		<img src={asset('deco.png', true)} alt="" class="mx-auto mt-4 h-4 w-auto" />
-		<p class="mt-6 leading-relaxed text-gray-600">{staff.description}</p>
-		<img
-			src={asset('graphic.png', true)}
-			alt=""
-			class="mx-auto mt-8 h-24 w-auto transition hover:scale-105"
-		/>
-		<div class="mt-8">
+	<section class="section">
+		<div class="container-page max-w-4xl text-center">
+			<h1 class="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+				{c.staff.title}{$t('pages.staff.sectionTitleSuffix')}
+			</h1>
+			<p class="mt-3 text-lg font-medium text-[var(--color-brand)]">{c.staff.planTitle}</p>
+			<img
+				src={asset('graphic.png', true)}
+				alt=""
+				class="mx-auto mt-8 h-24 w-auto transition hover:scale-105"
+			/>
+			<p class="mx-auto mt-6 max-w-3xl leading-relaxed text-gray-600">{c.staff.description}</p>
 			<a
 				href={staff.form}
 				target="_blank"
 				rel="noopener external"
-				class="inline-block rounded-full bg-orange-600 px-6 py-3 font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+				class="btn-primary mt-8"
 			>
 				{$t('pages.staff.joinBtn')}
 			</a>
 		</div>
-	</div>
-</section>
+	</section>
+{/if}

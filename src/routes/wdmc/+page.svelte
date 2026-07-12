@@ -5,52 +5,67 @@
 	import IconCard from '$lib/components/IconCard.svelte';
 	import ActivityCard from '$lib/components/ActivityCard.svelte';
 	import ClipCard from '$lib/components/ClipCard.svelte';
-	import { t } from '$lib/i18n';
-	import { services, home, asset } from '$lib/data/site';
+	import { t, content } from '$lib/i18n';
+	import { home, asset } from '$lib/data/site';
+
+	const c = $derived($content);
 </script>
 
 <svelte:head>
 	<title>{$t('nav.wdmc')} | {$t('site.name')}</title>
-	<meta name="description" content={services.wdmc.description} />
+	<meta name="description" content={c?.services.wdmc.description ?? ''} />
 </svelte:head>
 
-<PageBanner src={asset('index-banner1.jpg', true)} alt={$t('nav.wdmc')} />
+{#if c}
+	<PageBanner src={asset('index-banner1.jpg', true)} alt={c.services.wdmc.title} />
 
-<PageIntro
-	title={services.wdmc.title}
-	subtitle={services.wdmc.subtitle}
-	description={services.wdmc.description}
-/>
+	<PageIntro
+		title={c.services.wdmc.title}
+		subtitle={c.services.wdmc.subtitle}
+		description={c.services.wdmc.description}
+	/>
 
-<section class="bg-[#f8f5f2] py-16" id="case">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={$t('pages.wdmc.marketingTitle')} />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each services.wdmc.items as item (item.label)}
-				<IconCard icon={item.icon} label={item.label} />
-			{/each}
+	<section class="section section-soft" id="case">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.wdmc.marketingTitle')} />
+			<div class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+				{#each home.marketing.items as item, i (i)}
+					<IconCard icon={item.icon} label={c.home.marketing.items[i] ?? ''} />
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section class="py-16" id="act-item">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={$t('pages.wdmc.featuredTitle')} />
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each services.wdmc.featured as item (item.title)}
-				<ActivityCard href={item.href} src={item.src} title={item.title} />
-			{/each}
+	<section class="section" id="act-item">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.wdmc.featuredTitle')} />
+			<div class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+				{#each home.featured.items as item, i (i)}
+					<ActivityCard
+						href={item.href}
+						src={item.src}
+						title={c.home.featured.items[i] ?? ''}
+					/>
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section class="bg-[#f8f5f2] py-16">
-	<div class="mx-auto max-w-7xl px-4">
-		<SectionTitle title={$t('pages.wdmc.clipsTitle')} />
-		<div class="grid overflow-hidden md:grid-cols-2">
-			{#each home.clips.items as clip, index (clip.title)}
-				<ClipCard src={clip.src} year={clip.year} title={clip.title} desc={clip.desc} {index} />
-			{/each}
+	<section class="section section-soft">
+		<div class="container-page">
+			<SectionTitle title={$t('pages.wdmc.clipsTitle')} />
+			<div class="overflow-hidden rounded-2xl shadow-[var(--shadow-card)] md:grid md:grid-cols-2">
+				{#each home.clips.items as clip, index (index)}
+					{@const text = c.home.clips.items[index]}
+					<ClipCard
+						src={clip.src}
+						year={text?.year ?? ''}
+						title={text?.title ?? ''}
+						desc={text?.desc ?? ''}
+						{index}
+					/>
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
+{/if}

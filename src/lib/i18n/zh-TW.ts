@@ -77,11 +77,17 @@ export default {
 			clipsTitle: '活動剪輯',
 			introTitle: '瓦當麥可',
 			introSubtitle: '活動企劃 | 設計文案 | 行銷規劃',
-			introEnTitle: 'Activity integration'
+			introEnTitle: 'Activity integration',
+			bookingBtn: '線上預約 |'
 		},
 		about: {
 			sectionTitle: 'ABOUT US',
+			featuresTitle: '我們的優勢',
+			featuresSubtitle: 'Why WDMC',
+			teamTitle: '專業團隊',
+			teamSubtitle: 'Our Team',
 			envTitle: '公司環境',
+			envSubtitle: 'Workspace',
 			envCaption: '每一場成功的活動，都是業主與瓦當麥可一起共同努力達成的，瓦當麥可擁有的是配合度及專業，請相信我們！',
 			photoCaption: '辦公環境照片',
 			cta: '聯絡我們 |'

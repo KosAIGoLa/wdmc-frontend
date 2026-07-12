@@ -83,7 +83,12 @@ export default {
 		},
 		about: {
 			sectionTitle: 'ABOUT US',
+			featuresTitle: 'Our Strengths',
+			featuresSubtitle: 'Why WDMC',
+			teamTitle: 'Our Team',
+			teamSubtitle: 'Professionals',
 			envTitle: 'Office Environment',
+			envSubtitle: 'Workspace',
 			envCaption: 'Every successful event is the result of teamwork between our clients and WDMC. We pride ourselves on professionalism and cooperation.',
 			photoCaption: 'Office environment photo',
 			cta: 'Contact Us |'

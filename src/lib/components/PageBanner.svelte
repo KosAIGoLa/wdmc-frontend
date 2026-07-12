@@ -7,6 +7,8 @@
 	let { src, alt }: Props = $props();
 </script>
 
-<div class="overflow-hidden">
-	<img {src} {alt} class="h-auto w-full transition duration-[1200ms] ease-out hover:scale-[1.02]" />
+<div class="media-frame media-frame--soft relative bg-[#1a1a2e]">
+	<div class="aspect-[21/7] w-full sm:aspect-[21/6] md:aspect-[21/5.5]">
+		<img {src} {alt} class="h-full w-full object-cover object-center" loading="eager" decoding="async" />
+	</div>
 </div>

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import SectionTitle from '$lib/components/SectionTitle.svelte';
-	import { t } from '$lib/i18n';
-	import { privacy } from '$lib/data/site';
+	import { t, content } from '$lib/i18n';
+
+	const c = $derived($content);
 </script>
 
 <svelte:head>
@@ -9,21 +10,21 @@
 	<meta name="description" content={$t('pages.privacy.metaDescription')} />
 </svelte:head>
 
-<section class="py-16">
-	<div class="mx-auto max-w-4xl px-4">
-		<SectionTitle title={privacy.title} />
-		<div class="space-y-6 leading-relaxed text-gray-600">
-			<p>{$t('pages.privacy.intro')}</p>
-			{#each privacy.sections as section (section.title)}
-				<div
-					class="rounded-lg bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_12px_26px_rgba(17,24,39,0.1)]"
-				>
-					<h2 class="text-lg font-bold text-gray-800 transition-colors hover:text-orange-600">
-						{section.title}
-					</h2>
-					<p class="mt-2">{section.content}</p>
-				</div>
-			{/each}
+{#if c}
+	<section class="section">
+		<div class="container-page max-w-4xl">
+			<SectionTitle title={c.privacy.title} />
+			<p class="mb-8 leading-relaxed text-gray-600">{$t('pages.privacy.intro')}</p>
+			<div class="space-y-5">
+				{#each c.privacy.sections as section (section.title)}
+					<article class="card p-5">
+						<h2 class="text-lg font-bold text-gray-900 transition-colors hover:text-[var(--color-brand)]">
+							{section.title}
+						</h2>
+						<p class="mt-2 text-sm leading-relaxed text-gray-600">{section.content}</p>
+					</article>
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
+{/if}
