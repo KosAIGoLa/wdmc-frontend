@@ -356,6 +356,24 @@
 			if (p.x > w + pad) p.x = -pad;
 		}
 
+		/** Regions that must stay free of particle overlay (e.g. banner carousel) */
+		function clearNoParticleZones() {
+			const nodes = document.querySelectorAll<HTMLElement>('[data-no-particles]');
+			if (!nodes.length) return;
+			for (const el of nodes) {
+				const r = el.getBoundingClientRect();
+				if (r.width < 1 || r.height < 1) continue;
+				// Slight padding so soft glow doesn't bleed onto edges
+				const pad = 2;
+				ctx.clearRect(
+					Math.floor(r.left) - pad,
+					Math.floor(r.top) - pad,
+					Math.ceil(r.width) + pad * 2,
+					Math.ceil(r.height) + pad * 2
+				);
+			}
+		}
+
 		function frame(t: number) {
 			if (!running || !ctx) return;
 			const dt = Math.min(32, t - lastT) / 16.67;
@@ -681,6 +699,9 @@
 			if (!isLite && Math.random() < 0.03 && bursts.length < 80) {
 				spawnBurst(Math.random() * w, Math.random() * h, 5 + Math.floor(Math.random() * 6));
 			}
+
+			// Keep banners / marked regions free of particle overlay
+			clearNoParticleZones();
 
 			raf = requestAnimationFrame(frame);
 		}

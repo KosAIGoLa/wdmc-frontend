@@ -4,7 +4,18 @@
 	import { t, content, tAny } from '$lib/i18n';
 	import { contact, site, asset } from '$lib/data/site';
 
+	type FieldKey = 'name' | 'email' | 'phone' | 'message' | 'agree';
+
+	let name = $state('');
+	let email = $state('');
+	let phone = $state('');
+	let message = $state('');
 	let agreed = $state(false);
+	let submitted = $state(false);
+	let triedSubmit = $state(false);
+	let errors = $state<Partial<Record<FieldKey, string>>>({});
+	let formEl: HTMLFormElement | undefined = $state();
+
 	const c = $derived($content);
 	const terms = $derived.by(() => {
 		const value = $tAny('pages.contact.terms');
@@ -18,6 +29,94 @@
 		if (key === 'email') return [site.email];
 		if (key === 'line') return [...(c.contact.channels.line.values ?? [])];
 		return [];
+	}
+
+	function isEmail(value: string) {
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+	}
+
+	/** Accepts TW mobile / landline / simple international formats */
+	function isPhone(value: string) {
+		const digits = value.replace(/[\s\-()#+]/g, '');
+		return /^\d{8,15}$/.test(digits);
+	}
+
+	function collectErrors(): Partial<Record<FieldKey, string>> {
+		const next: Partial<Record<FieldKey, string>> = {};
+
+		if (!name.trim()) next.name = $t('pages.contact.formErrorRequired');
+		if (!email.trim()) next.email = $t('pages.contact.formErrorRequired');
+		else if (!isEmail(email.trim())) next.email = $t('pages.contact.formErrorEmail');
+		if (!phone.trim()) next.phone = $t('pages.contact.formErrorRequired');
+		else if (!isPhone(phone.trim())) next.phone = $t('pages.contact.formErrorPhone');
+		if (!message.trim()) next.message = $t('pages.contact.formErrorRequired');
+		if (!agreed) next.agree = $t('pages.contact.formErrorAgree');
+
+		return next;
+	}
+
+	function validate(showAll = true): boolean {
+		const next = collectErrors();
+
+		if (showAll) {
+			errors = next;
+		} else {
+			// After first submit: re-validate and drop fixed fields, update remaining
+			const updated: Partial<Record<FieldKey, string>> = {};
+			for (const key of Object.keys(errors) as FieldKey[]) {
+				if (next[key]) updated[key] = next[key];
+			}
+			// Also surface errors for fields user is fixing into a new invalid state
+			for (const key of Object.keys(next) as FieldKey[]) {
+				if (triedSubmit) updated[key] = next[key];
+			}
+			errors = updated;
+		}
+
+		return Object.keys(next).length === 0;
+	}
+
+	function onFieldInput() {
+		if (!triedSubmit) return;
+		validate(false);
+	}
+
+	function fieldClass(key: FieldKey) {
+		const base =
+			'mt-1 w-full rounded-lg border px-3 py-2 text-sm transition focus:outline-none focus:ring-2';
+		if (errors[key]) {
+			return `${base} border-red-400 bg-red-50/40 focus:border-red-500 focus:ring-red-200`;
+		}
+		return `${base} border-gray-300 focus:border-orange-500 focus:ring-orange-200`;
+	}
+
+	function handleSubmit(e: Event) {
+		e.preventDefault();
+		triedSubmit = true;
+		submitted = false;
+
+		const ok = validate(true);
+		if (!ok) {
+			// Focus first invalid field
+			const order: FieldKey[] = ['name', 'email', 'phone', 'message', 'agree'];
+			const first = order.find((k) => errors[k]);
+			if (first === 'agree') {
+				formEl?.querySelector<HTMLInputElement>('#agree')?.focus();
+			} else if (first) {
+				formEl?.querySelector<HTMLElement>(`#${first}`)?.focus();
+			}
+			return;
+		}
+
+		// No backend yet — show success and reset
+		submitted = true;
+		name = '';
+		email = '';
+		phone = '';
+		message = '';
+		agreed = false;
+		errors = {};
+		triedSubmit = false;
 	}
 </script>
 
@@ -97,52 +196,153 @@
 							>{$t('pages.contact.facebook')}</a
 						>
 					</p>
-					<form class="space-y-4" onsubmit={(e) => e.preventDefault()}>
+
+					{#if submitted}
+						<div
+							class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+							role="status"
+						>
+							{$t('pages.contact.formSuccess')}
+						</div>
+					{/if}
+
+					{#if triedSubmit && Object.keys(errors).length > 0}
+						<div
+							class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+							role="alert"
+						>
+							{$t('pages.contact.formErrorSummary')}
+						</div>
+					{/if}
+
+					<form
+						bind:this={formEl}
+						class="space-y-4"
+						novalidate
+						onsubmit={handleSubmit}
+					>
 						<div>
-							<label for="name" class="block text-sm font-medium text-gray-700"
-								>{$t('pages.contact.formName')}</label
-							>
+							<label for="name" class="block text-sm font-medium text-gray-700">
+								{$t('pages.contact.formName')}
+								<span class="text-[var(--color-brand)]" aria-hidden="true">*</span>
+							</label>
 							<input
 								id="name"
+								name="name"
 								type="text"
-								class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+								autocomplete="name"
+								required
+								aria-required="true"
+								aria-invalid={errors.name ? 'true' : undefined}
+								aria-describedby={errors.name ? 'name-error' : undefined}
+								bind:value={name}
+								oninput={onFieldInput}
+								class={fieldClass('name')}
 							/>
+							{#if errors.name}
+								<p id="name-error" class="mt-1 text-xs font-medium text-red-600">{errors.name}</p>
+							{/if}
 						</div>
+
 						<div>
-							<label for="email" class="block text-sm font-medium text-gray-700"
-								>{$t('pages.contact.formEmail')}</label
-							>
+							<label for="email" class="block text-sm font-medium text-gray-700">
+								{$t('pages.contact.formEmail')}
+								<span class="text-[var(--color-brand)]" aria-hidden="true">*</span>
+							</label>
 							<input
 								id="email"
+								name="email"
 								type="email"
-								class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+								autocomplete="email"
+								required
+								aria-required="true"
+								aria-invalid={errors.email ? 'true' : undefined}
+								aria-describedby={errors.email ? 'email-error' : undefined}
+								bind:value={email}
+								oninput={onFieldInput}
+								class={fieldClass('email')}
 							/>
+							{#if errors.email}
+								<p id="email-error" class="mt-1 text-xs font-medium text-red-600">{errors.email}</p>
+							{/if}
 						</div>
+
 						<div>
-							<label for="phone" class="block text-sm font-medium text-gray-700"
-								>{$t('pages.contact.formPhone')}</label
-							>
+							<label for="phone" class="block text-sm font-medium text-gray-700">
+								{$t('pages.contact.formPhone')}
+								<span class="text-[var(--color-brand)]" aria-hidden="true">*</span>
+							</label>
 							<input
 								id="phone"
+								name="phone"
 								type="tel"
-								class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+								autocomplete="tel"
+								required
+								aria-required="true"
+								aria-invalid={errors.phone ? 'true' : undefined}
+								aria-describedby={errors.phone ? 'phone-error' : undefined}
+								bind:value={phone}
+								oninput={onFieldInput}
+								class={fieldClass('phone')}
 							/>
+							{#if errors.phone}
+								<p id="phone-error" class="mt-1 text-xs font-medium text-red-600">{errors.phone}</p>
+							{/if}
 						</div>
+
 						<div>
-							<label for="message" class="block text-sm font-medium text-gray-700"
-								>{$t('pages.contact.formMessage')}</label
-							>
+							<label for="message" class="block text-sm font-medium text-gray-700">
+								{$t('pages.contact.formMessage')}
+								<span class="text-[var(--color-brand)]" aria-hidden="true">*</span>
+							</label>
 							<textarea
 								id="message"
+								name="message"
 								rows="4"
-								class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+								required
+								aria-required="true"
+								aria-invalid={errors.message ? 'true' : undefined}
+								aria-describedby={errors.message ? 'message-error' : undefined}
+								bind:value={message}
+								oninput={onFieldInput}
+								class={fieldClass('message')}
 							></textarea>
+							{#if errors.message}
+								<p id="message-error" class="mt-1 text-xs font-medium text-red-600">
+									{errors.message}
+								</p>
+							{/if}
 						</div>
-						<label class="flex items-start gap-2 text-sm text-gray-600">
-							<input type="checkbox" bind:checked={agreed} class="mt-1" />
-							<span>{$t('pages.contact.formAgree')}</span>
-						</label>
-						<button type="submit" disabled={!agreed} class="btn-primary w-full disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:translate-y-0 disabled:hover:shadow-none">
+
+						<div>
+							<label
+								class="flex items-start gap-2 text-sm {errors.agree
+									? 'text-red-700'
+									: 'text-gray-600'}"
+							>
+								<input
+									id="agree"
+									name="agree"
+									type="checkbox"
+									required
+									aria-required="true"
+									aria-invalid={errors.agree ? 'true' : undefined}
+									aria-describedby={errors.agree ? 'agree-error' : undefined}
+									bind:checked={agreed}
+									onchange={onFieldInput}
+									class="mt-1 h-4 w-4 rounded border-gray-300 text-[var(--color-brand)] accent-[var(--color-brand)] focus:ring-[var(--color-brand)]"
+								/>
+								<span>
+									{$t('pages.contact.formAgree')}
+									<span class="text-[var(--color-brand)]" aria-hidden="true">*</span>
+								</span>
+							</label>
+							{#if errors.agree}
+								<p id="agree-error" class="mt-1 text-xs font-medium text-red-600">{errors.agree}</p>
+							{/if}
+						</div>
+
+						<button type="submit" class="btn-primary w-full">
 							{$t('pages.contact.formSubmit')}
 						</button>
 					</form>

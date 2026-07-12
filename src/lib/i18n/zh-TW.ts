@@ -170,7 +170,13 @@ export default {
 			formPhone: '聯絡電話',
 			formMessage: '需求內容',
 			formAgree: '本人已詳細閱讀且同意《個人資料及服務條款》',
-			formSubmit: '送出表單'
+			formSubmit: '送出表單',
+			formSuccess: '表單已送出，我們會盡快與您聯繫！',
+			formErrorRequired: '此欄位為必填',
+			formErrorEmail: '請輸入有效的 Email 格式',
+			formErrorPhone: '請輸入有效的聯絡電話',
+			formErrorAgree: '請勾選同意個人資料及服務條款',
+			formErrorSummary: '請完整填寫表單後再送出'
 		},
 		privacy: {
 			sectionTitle: '隱私權條款',

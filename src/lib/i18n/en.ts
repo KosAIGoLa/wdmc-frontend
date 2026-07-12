@@ -171,7 +171,13 @@ export default {
 			formPhone: 'Phone',
 			formMessage: 'Message',
 			formAgree: 'I have read and agree to the Personal Data and Service Terms.',
-			formSubmit: 'Submit'
+			formSubmit: 'Submit',
+			formSuccess: 'Submitted! We will contact you soon.',
+			formErrorRequired: 'This field is required',
+			formErrorEmail: 'Please enter a valid email address',
+			formErrorPhone: 'Please enter a valid phone number',
+			formErrorAgree: 'Please agree to the Personal Data and Service Terms',
+			formErrorSummary: 'Please complete the form before submitting'
 		},
 		privacy: {
 			sectionTitle: 'Privacy Policy',
