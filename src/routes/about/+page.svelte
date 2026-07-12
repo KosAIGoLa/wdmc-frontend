@@ -30,12 +30,12 @@
 						class="group relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface-elevated)] px-5 py-8 text-center shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-[var(--color-brand)]/20 hover:shadow-[0_14px_34px_rgba(229,85,74,0.12)]"
 					>
 						<div
-							class="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--color-surface-soft)] ring-1 ring-[var(--color-line)] transition duration-300 group-hover:bg-[var(--color-hover-soft)] group-hover:ring-[var(--color-brand)]/20"
+							class="feature-icon-wrap mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--color-surface-soft)] ring-1 ring-[var(--color-line)] transition duration-300 group-hover:bg-[var(--color-hover-soft)] group-hover:ring-[var(--color-brand)]/25"
 						>
 							<img
 								src={asset(feature.icon)}
 								alt={f?.title}
-								class="h-12 w-12 object-contain transition duration-300 group-hover:scale-110"
+								class="feature-icon h-12 w-12 object-contain transition duration-300 group-hover:scale-110"
 							/>
 						</div>
 						<h3
@@ -202,5 +202,33 @@
 	/* Keep team cards visually even even when contact rows differ */
 	.team-card {
 		min-height: 100%;
+	}
+
+	/*
+	 * 「我們的優勢」icons：素材本身偏淡，預設就加重，hover 再更深一檔。
+	 */
+	.feature-icon {
+		filter: saturate(1.65) contrast(1.45) brightness(0.82)
+			drop-shadow(0 2px 4px rgba(48, 45, 44, 0.12));
+		transition:
+			transform 0.3s ease,
+			filter 0.35s ease;
+	}
+
+	:global(.group:hover) .feature-icon,
+	.group:hover .feature-icon {
+		filter: saturate(1.9) contrast(1.6) brightness(0.74)
+			drop-shadow(0 5px 12px rgba(229, 85, 74, 0.28));
+	}
+
+	:global(html.dark) .feature-icon {
+		/* 深色底上略提亮，但仍保持濃色 */
+		filter: saturate(1.75) contrast(1.5) brightness(1.05)
+			drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+	}
+
+	:global(html.dark) .group:hover .feature-icon {
+		filter: saturate(2) contrast(1.65) brightness(1.12)
+			drop-shadow(0 5px 14px rgba(229, 85, 74, 0.4));
 	}
 </style>
