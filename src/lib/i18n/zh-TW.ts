@@ -46,6 +46,7 @@ export default {
 		contactUs: '聯絡我們',
 		bookNow: '線上預約',
 		joinUs: '有興趣加入培訓',
+		loading: '載入中',
 		themeLight: '淺色',
 		themeDark: '深色',
 		themeToLight: '切換為淺色模式',

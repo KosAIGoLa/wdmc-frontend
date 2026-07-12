@@ -47,6 +47,7 @@ export default {
 		contactUs: 'Contact Us',
 		bookNow: 'Book now',
 		joinUs: 'Join us',
+		loading: 'Loading',
 		themeLight: 'Light',
 		themeDark: 'Dark',
 		themeToLight: 'Switch to light mode',
