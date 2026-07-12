@@ -1,21 +1,77 @@
 @import 'tailwindcss';
 
-/* ---------- Design tokens ---------- */
+/* ---------- Design tokens (light) ---------- */
 :root {
+	color-scheme: light;
 	--color-ink: #302d2c;
 	--color-muted: #6b7280;
 	--color-brand: #e5554a;
 	--color-brand-deep: #df4059;
 	--color-surface: #ffffff;
 	--color-surface-soft: #f7f4f1;
+	--color-surface-elevated: #ffffff;
 	--color-line: rgba(17, 24, 39, 0.08);
+	--color-line-strong: rgba(17, 24, 39, 0.12);
+	--color-hover-soft: #fff7ed; /* orange-50-ish */
+	--color-header-bg: rgba(255, 255, 255, 0.92);
+	--color-panel: #ffffff;
+	--color-panel-border: rgba(0, 0, 0, 0.06);
+	--color-menu-tail: #ffffff;
 	--radius-card: 1rem;
 	--radius-pill: 9999px;
 	--shadow-card: 0 8px 28px rgba(17, 24, 39, 0.07);
 	--shadow-card-hover: 0 16px 40px rgba(17, 24, 39, 0.12);
+	--shadow-float: 0 8px 22px rgba(0, 0, 0, 0.12);
 	--container: 80rem; /* max-w-7xl */
 	--section-y: clamp(3rem, 5vw, 5rem);
 	--header-blur: 12px;
+	--theme-transition:
+		background-color 0.35s ease,
+		color 0.35s ease,
+		border-color 0.35s ease,
+		box-shadow 0.35s ease;
+}
+
+/* ---------- Design tokens (dark) ---------- */
+html.dark {
+	color-scheme: dark;
+	--color-ink: #f0ebe6;
+	--color-muted: #a8a09a;
+	--color-brand: #f06a5f;
+	--color-brand-deep: #c93a4f;
+	--color-surface: #12100f;
+	--color-surface-soft: #1a1715;
+	--color-surface-elevated: #221e1c;
+	--color-line: rgba(255, 255, 255, 0.08);
+	--color-line-strong: rgba(255, 255, 255, 0.14);
+	--color-hover-soft: rgba(229, 85, 74, 0.14);
+	--color-header-bg: rgba(18, 16, 15, 0.9);
+	--color-panel: #1e1a18;
+	--color-panel-border: rgba(255, 255, 255, 0.1);
+	--color-menu-tail: #1e1a18;
+	--shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+	--shadow-card-hover: 0 16px 40px rgba(0, 0, 0, 0.45);
+	--shadow-float: 0 8px 22px rgba(0, 0, 0, 0.4);
+
+	/*
+	 * Remap Tailwind gray scale so existing text-gray-* / bg-gray-*
+	 * utilities automatically adapt without touching every page.
+	 */
+	--color-gray-50: #1a1715;
+	--color-gray-100: #221e1c;
+	--color-gray-200: #2e2926;
+	--color-gray-300: #3f3834;
+	--color-gray-400: #78716c;
+	--color-gray-500: #a8a29e;
+	--color-gray-600: #d6d3d1;
+	--color-gray-700: #e7e5e4;
+	--color-gray-800: #f5f5f4;
+	--color-gray-900: #fafaf9;
+	--color-gray-950: #ffffff;
+
+	/* Soft oranges used as hover chips */
+	--color-orange-50: rgba(229, 85, 74, 0.14);
+	--color-orange-100: rgba(229, 85, 74, 0.2);
 }
 
 /* ---------- Base ---------- */
@@ -37,11 +93,17 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
 	line-height: 1.6;
+	transition: var(--theme-transition);
 }
 
 ::selection {
-	background-color: rgba(229, 85, 74, 0.18);
-	color: #1f1b1a;
+	background-color: rgba(229, 85, 74, 0.28);
+	color: inherit;
+}
+
+html.dark ::selection {
+	background-color: rgba(240, 106, 95, 0.35);
+	color: #fff;
 }
 
 img {
@@ -63,20 +125,58 @@ img {
 
 .section-soft {
 	background-color: var(--color-surface-soft);
+	transition: background-color 0.35s ease;
 }
 
 .card {
 	border-radius: var(--radius-card);
-	background: var(--color-surface);
+	background: var(--color-surface-elevated);
 	box-shadow: var(--shadow-card);
+	border: 1px solid var(--color-line);
 	transition:
 		transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-		box-shadow 0.35s ease;
+		box-shadow 0.35s ease,
+		background-color 0.35s ease,
+		border-color 0.35s ease;
 }
 
 .card:hover {
 	transform: translateY(-4px);
 	box-shadow: var(--shadow-card-hover);
+}
+
+/* Semantic helpers used by chrome components */
+.bg-surface {
+	background-color: var(--color-surface);
+}
+
+.bg-surface-soft {
+	background-color: var(--color-surface-soft);
+}
+
+.bg-panel {
+	background-color: var(--color-panel);
+}
+
+.text-ink {
+	color: var(--color-ink);
+}
+
+.border-line {
+	border-color: var(--color-line);
+}
+
+html.dark .media-frame {
+	background: #2a2522;
+}
+
+html.dark .media-frame--lift {
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+html.dark .media-frame--lift:hover,
+html.dark .group:hover .media-frame--lift {
+	box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
 }
 
 /* ---------- Image hover effects ---------- */
@@ -263,9 +363,34 @@ img {
 	box-shadow: 0 8px 18px rgba(229, 85, 74, 0.22);
 }
 
+/* Form controls — theme-aware defaults */
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+textarea,
+select {
+	background-color: var(--color-surface-elevated);
+	color: var(--color-ink);
+	border-color: color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file'])::placeholder,
+textarea::placeholder {
+	color: var(--color-muted);
+}
+
+html.dark input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+html.dark textarea,
+html.dark select {
+	border-color: var(--color-line-strong);
+	background-color: #1a1715;
+}
+
 /* ---------- View Transition names ---------- */
+/*
+ * Header VT name lives on `.site-header-vt` (top chrome only) inside Header.svelte.
+ * Do NOT put it on the sticky wrapper — that also contains the mobile drawer.
+ */
 .site-header {
-	view-transition-name: site-header;
+	/* sticky shell only; no view-transition-name */
 }
 
 .site-footer {
@@ -290,48 +415,80 @@ main.page-content {
 
 /* ---------- View Transition animations ---------- */
 @media (prefers-reduced-motion: no-preference) {
-	::view-transition-old(root),
+	/*
+	 * IMPORTANT: `animation: none` on BOTH old + new leaves two full-opacity
+	 * snapshots stacked → visible double/overlap on PC clicks.
+	 * For chrome that should stay put: hide old, keep only new.
+	 */
+	::view-transition-old(root) {
+		display: none;
+	}
+
 	::view-transition-new(root) {
 		animation: none;
 		mix-blend-mode: normal;
 	}
 
+	/* Sticky chrome: no morph, no double-image */
 	::view-transition-old(site-header),
-	::view-transition-new(site-header),
 	::view-transition-old(site-footer),
-	::view-transition-new(site-footer),
 	::view-transition-old(site-float),
-	::view-transition-new(site-float),
 	::view-transition-old(site-back-top),
+	::view-transition-old(site-line) {
+		display: none;
+	}
+
+	::view-transition-new(site-header),
+	::view-transition-new(site-footer),
+	::view-transition-new(site-float),
 	::view-transition-new(site-back-top),
-	::view-transition-old(site-line),
 	::view-transition-new(site-line) {
 		animation: none;
 		mix-blend-mode: normal;
 	}
 
+	::view-transition-group(site-header) {
+		z-index: 100;
+		animation: none;
+	}
+
+	::view-transition-group(site-footer) {
+		animation: none;
+	}
+
+	/* Page body cross-fade / slide (only named region that animates) */
 	::view-transition-old(page-content) {
 		animation: page-out 220ms cubic-bezier(0.4, 0, 0.2, 1) both;
 		z-index: 1;
+		mix-blend-mode: normal;
 	}
 
 	::view-transition-new(page-content) {
 		animation: page-in 380ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
 		z-index: 2;
+		mix-blend-mode: normal;
 	}
 
 	::view-transition-group(page-content) {
 		overflow: clip;
 	}
 
-	::view-transition-group(site-header) {
-		z-index: 100;
-	}
-
 	::view-transition-group(site-float),
 	::view-transition-group(site-back-top),
 	::view-transition-group(site-line) {
 		z-index: 40;
+		animation: none;
+	}
+
+	/* Mobile: shorter, no blur */
+	@media (max-width: 1023px) {
+		::view-transition-old(page-content) {
+			animation: page-out-mobile 140ms ease-out both;
+		}
+
+		::view-transition-new(page-content) {
+			animation: page-in-mobile 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+		}
 	}
 }
 
@@ -366,6 +523,28 @@ main.page-content {
 		opacity: 1;
 		transform: translateY(0);
 		filter: blur(0);
+	}
+}
+
+@keyframes page-out-mobile {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-6px);
+	}
+}
+
+@keyframes page-in-mobile {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 

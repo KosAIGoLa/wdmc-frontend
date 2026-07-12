@@ -4,9 +4,10 @@
 	import { navItems, asset } from '$lib/data/site';
 	import type { NavItem } from '$lib/data/site';
 	import { t, content } from '$lib/i18n';
-	import { slide } from 'svelte/transition';
-	import { afterNavigate } from '$app/navigation';
-	import { tick } from 'svelte';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
+	import { onMount, tick } from 'svelte';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	import { theme } from '$lib/theme';
 
 	/** Route paths used by primary navigation (satisfies resolve() typing). */
 	type NavPath =
@@ -25,10 +26,34 @@
 		| '/#services';
 
 	let mobileOpen = $state(false);
-	let servicesOpen = $state(false);
+	/** Mobile drawer: inline accordion only (never the floating flyout). */
+	let mobileServicesOpen = $state(false);
+	/** Desktop hover flyout only (lg+). Completely separate from mobile. */
+	let desktopServicesOpen = $state(false);
+	/**
+	 * Skip drawer CSS transitions when closing for navigation so View Transition
+	 * captures a stable header (no mid-collapse height jump / jank).
+	 */
+	let closeInstant = $state(false);
 	let timer: ReturnType<typeof setTimeout>;
 	let servicesTrigger: HTMLElement | undefined = $state();
 	let menuPos = $state({ top: 0, left: 0 });
+	/** Matches Tailwind `lg` — portal must not mount below this width. */
+	let isDesktop = $state(false);
+
+	function closeMobileNav(instant = false) {
+		if (instant) closeInstant = true;
+		mobileOpen = false;
+		mobileServicesOpen = false;
+		if (instant) {
+			// Allow one frame with transitions disabled, then restore for next open
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					closeInstant = false;
+				});
+			});
+		}
+	}
 
 	const servicesItem = navItems.find((item) => item.children?.length);
 
@@ -47,7 +72,7 @@
 	}
 
 	function positionServicesMenu() {
-		if (!servicesTrigger) return;
+		if (!servicesTrigger || !isDesktop) return;
 		const rect = servicesTrigger.getBoundingClientRect();
 		menuPos = {
 			top: rect.bottom + 4,
@@ -55,18 +80,20 @@
 		};
 	}
 
-	async function openServices() {
+	async function openDesktopServices() {
+		if (!isDesktop) return;
 		clearTimeout(timer);
-		servicesOpen = true;
+		desktopServicesOpen = true;
 		await tick();
 		positionServicesMenu();
 	}
-	function closeServices() {
-		timer = setTimeout(() => (servicesOpen = false), 180);
+	function closeDesktopServices() {
+		timer = setTimeout(() => (desktopServicesOpen = false), 180);
 	}
-	function keepServicesOpen() {
+	function keepDesktopServicesOpen() {
+		if (!isDesktop) return;
 		clearTimeout(timer);
-		servicesOpen = true;
+		desktopServicesOpen = true;
 		positionServicesMenu();
 	}
 	function isActive(href: string): boolean {
@@ -80,35 +107,81 @@
 		return item.children?.some((child) => isActive(child.href)) ?? false;
 	}
 
+	function syncViewport() {
+		const next = window.matchMedia('(min-width: 1024px)').matches;
+		isDesktop = next;
+		if (!next) {
+			// Leaving desktop: kill flyout so it never sticks as a "popup" on phones
+			desktopServicesOpen = false;
+			clearTimeout(timer);
+		} else {
+			mobileOpen = false;
+			mobileServicesOpen = false;
+		}
+	}
+
+	// Close drawer *before* View Transition snapshots the DOM (avoids tall→short header jump)
+	beforeNavigate(({ type, willUnload }) => {
+		if (willUnload) return;
+		// Keep drawer open only for pure hash/same-doc noise; path changes always snap-close
+		if (type === 'leave') return;
+		if (mobileOpen || mobileServicesOpen) {
+			closeMobileNav(true);
+		}
+		desktopServicesOpen = false;
+	});
+
 	afterNavigate(() => {
-		mobileOpen = false;
-		servicesOpen = false;
+		closeMobileNav(true);
+		desktopServicesOpen = false;
+	});
+
+	onMount(() => {
+		syncViewport();
+		const mq = window.matchMedia('(min-width: 1024px)');
+		const onMq = () => syncViewport();
+		mq.addEventListener('change', onMq);
+		return () => mq.removeEventListener('change', onMq);
 	});
 </script>
 
 <svelte:window
 	onscroll={() => {
-		if (servicesOpen) positionServicesMenu();
-	}}
-	onresize={() => {
-		if (servicesOpen) positionServicesMenu();
+		if (desktopServicesOpen && isDesktop) positionServicesMenu();
 	}}
 />
 
 <header
-	class="relative border-b border-black/[0.04] bg-white shadow-[0_1px_0_rgba(17,24,39,0.04)] transition-shadow duration-300"
+	class="site-header-bar relative border-b border-[var(--color-line)] bg-[var(--color-header-bg)] shadow-[0_1px_0_var(--color-line)] backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-300 supports-[backdrop-filter]:bg-[color-mix(in_srgb,var(--color-surface)_88%,transparent)] md:backdrop-blur-md"
 >
+	<!--
+	  Only this fixed-height chrome participates in View Transitions.
+	  Mobile drawer is excluded so open/close never morphs the header snapshot.
+	-->
+	<div class="site-header-vt">
 	<div
-		class="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:gap-6 lg:px-8 lg:py-4 xl:px-12"
+		class="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 lg:gap-6 lg:px-8 lg:py-4 xl:px-12"
 	>
 		<a
 			href={resolve('/')}
-			class="flex shrink-0 items-center rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500"
+			class="site-logo-link group relative flex shrink-0 items-center rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500"
 		>
+			<!-- Light logo (default) -->
 			<img
 				src={asset('logo.png', true)}
 				alt={$content?.site.name ?? $t('site.name')}
-				class="h-auto w-[128px] transition duration-300 hover:scale-[1.02] sm:w-[148px] lg:w-[168px] xl:w-[190px]"
+				class="site-logo site-logo--light h-auto w-[128px] transition duration-300 group-hover:scale-[1.02] sm:w-[148px] lg:w-[168px] xl:w-[190px]"
+				class:site-logo--active={$theme === 'light'}
+				class:site-logo--inactive={$theme === 'dark'}
+			/>
+			<!-- Dark logo (light text, same mark) — crossfades with theme -->
+			<img
+				src={asset('logo-dark.png', true)}
+				alt=""
+				aria-hidden="true"
+				class="site-logo site-logo--dark pointer-events-none absolute left-0 top-1/2 h-auto w-[128px] -translate-y-1/2 transition duration-300 group-hover:scale-[1.02] sm:w-[148px] lg:w-[168px] xl:w-[190px]"
+				class:site-logo--active={$theme === 'dark'}
+				class:site-logo--inactive={$theme === 'light'}
 			/>
 		</a>
 
@@ -122,26 +195,35 @@
 					<div
 						class="relative"
 						role="group"
-						onmouseenter={openServices}
-						onmouseleave={closeServices}
+						onmouseenter={openDesktopServices}
+						onmouseleave={closeDesktopServices}
 					>
 						<button
 							type="button"
 							bind:this={servicesTrigger}
-							class="relative flex items-center gap-0.5 whitespace-nowrap py-2.5 transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#E5554A] after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 {isParentActive(
+							class="relative flex items-center gap-0.5 whitespace-nowrap py-2.5 transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--color-brand)] after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 {isParentActive(
 								item
 							)
-								? 'font-semibold text-[#E5554A] after:scale-x-100'
-								: 'text-[#302D2C] hover:text-[#E5554A]'}"
-							aria-expanded={servicesOpen}
+								? 'font-semibold text-[var(--color-brand)] after:scale-x-100'
+								: 'text-[var(--color-ink)] hover:text-[var(--color-brand)]'}"
+							aria-expanded={desktopServicesOpen}
 							aria-haspopup="true"
+							onclick={(e) => {
+								// Desktop only — never open flyout from a touch/click path on narrow viewports
+								if (!isDesktop) {
+									e.preventDefault();
+									return;
+								}
+								desktopServicesOpen = !desktopServicesOpen;
+								if (desktopServicesOpen) positionServicesMenu();
+							}}
 						>
 							{#if isParentActive(item)}
 								<span class="mr-1 text-[10px]" aria-hidden="true">●</span>
 							{/if}
 							{$t('nav.' + item.key)}
 							<svg
-								class="h-3.5 w-3.5 shrink-0 opacity-70 transition-transform duration-200 {servicesOpen
+								class="h-3.5 w-3.5 shrink-0 opacity-70 transition-transform duration-200 {desktopServicesOpen
 									? 'rotate-180'
 									: ''}"
 								fill="none"
@@ -157,11 +239,11 @@
 				{:else}
 					<a
 						href={resolve(asNavPath(item.href))}
-						class="relative whitespace-nowrap py-2.5 transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#E5554A] after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 {isActive(
+						class="relative whitespace-nowrap py-2.5 transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--color-brand)] after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 {isActive(
 							item.href
 						)
-							? 'font-semibold text-[#E5554A] after:scale-x-100'
-							: 'text-[#302D2C] hover:text-[#E5554A]'}"
+							? 'font-semibold text-[var(--color-brand)] after:scale-x-100'
+							: 'text-[var(--color-ink)] hover:text-[var(--color-brand)]'}"
 					>
 						{#if isActive(item.href)}
 							<span class="mr-1 text-[10px]" aria-hidden="true">●</span>
@@ -170,107 +252,140 @@
 					</a>
 				{/if}
 			{/each}
+
+			<div class="ml-1 shrink-0 pl-1 xl:ml-2 xl:pl-2">
+				<ThemeToggle />
+			</div>
 		</nav>
 
-		<!-- Mobile toggle -->
-		<button
-			type="button"
-			class="rounded-full p-2.5 text-[#302D2C] transition hover:bg-orange-50 hover:text-[#E5554A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 lg:hidden"
-			onclick={() => (mobileOpen = !mobileOpen)}
-			aria-label="Toggle menu"
-			aria-expanded={mobileOpen}
-		>
-			<svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-				{#if mobileOpen}
-					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-				{:else}
-					<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-				{/if}
-			</svg>
-		</button>
+		<div class="flex items-center gap-1 lg:hidden">
+			<ThemeToggle />
+			<!-- Mobile toggle -->
+			<button
+				type="button"
+				class="rounded-full p-2.5 text-[var(--color-ink)] transition hover:bg-[var(--color-hover-soft)] hover:text-[var(--color-brand)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+				onclick={() => {
+					if (mobileOpen) closeMobileNav(false);
+					else mobileOpen = true;
+				}}
+				aria-label="Toggle menu"
+				aria-expanded={mobileOpen}
+				aria-controls="mobile-nav"
+			>
+				<svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					{#if mobileOpen}
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+					{:else}
+						<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+					{/if}
+				</svg>
+			</button>
+		</div>
 	</div>
+	</div><!-- /.site-header-vt -->
 
-	<!-- Mobile menu -->
-	{#if mobileOpen}
-		<nav
-			transition:slide={{ duration: 260, easing: (t) => 1 - Math.pow(1 - t, 3) }}
-			class="border-t border-[#DFE7E9] bg-white px-3 pb-4 pt-1 lg:hidden"
-			aria-label="Mobile"
-		>
-			{#each navItems as item (item.href)}
-				{#if item.children}
-					<div class="py-0.5">
-						<button
-							type="button"
-							class="flex w-full items-center justify-between rounded-xl px-3 py-3 text-[15px] transition {isParentActive(
-								item
-							)
-								? 'bg-orange-50 font-semibold text-[#E5554A]'
-								: 'text-[#302D2C] hover:bg-orange-50 hover:text-[#E5554A]'}"
-							onclick={() => (servicesOpen = !servicesOpen)}
-							aria-expanded={servicesOpen}
-						>
-							<span class="flex items-center">
-								{#if isParentActive(item)}
-									<span class="mr-1.5 text-[10px]" aria-hidden="true">●</span>
-								{/if}
-								{$t('nav.' + item.key)}
-							</span>
-							<svg
-								class="h-4 w-4 transition-transform duration-200 {servicesOpen ? 'rotate-180' : ''}"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								viewBox="0 0 24 24"
-								aria-hidden="true"
+	<!--
+	  Mobile menu: CSS grid 0fr→1fr expand (no Svelte slide / height measure).
+	  Outside VT name so it never freezes mid-open during page transitions.
+	-->
+	<nav
+		id="mobile-nav"
+		class="mobile-nav border-[var(--color-line)] bg-[var(--color-surface)] lg:hidden"
+		class:mobile-nav--open={mobileOpen}
+		class:mobile-nav--instant={closeInstant}
+		aria-label="Mobile"
+		aria-hidden={!mobileOpen}
+		inert={!mobileOpen}
+	>
+		<div class="mobile-nav__clip">
+			<div class="mobile-nav__inner px-3 pb-4 pt-1">
+				{#each navItems as item (item.href)}
+					{#if item.children}
+						<!-- Mobile: inline accordion only — never the floating desktop flyout -->
+						<div class="py-0.5">
+							<button
+								type="button"
+								class="flex w-full items-center justify-between rounded-xl px-3 py-3 text-[15px] transition {isParentActive(
+									item
+								)
+									? 'bg-[var(--color-hover-soft)] font-semibold text-[var(--color-brand)]'
+									: 'text-[var(--color-ink)] hover:bg-[var(--color-hover-soft)] hover:text-[var(--color-brand)]'}"
+								onclick={() => (mobileServicesOpen = !mobileServicesOpen)}
+								aria-expanded={mobileServicesOpen}
 							>
-								<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-							</svg>
-						</button>
-						{#if servicesOpen}
-							<div transition:slide={{ duration: 200 }} class="ml-2 border-l border-orange-100 pl-2">
-								{#each item.children as child (child.href)}
-									<a
-										href={resolve(asNavPath(child.href))}
-										class="block rounded-xl px-3 py-2.5 text-[14.5px] transition hover:bg-orange-50 hover:text-[#E5554A] {isActive(
-											child.href
-										)
-											? 'font-semibold text-[#E5554A]'
-											: 'text-[#302D2C]'}"
-										onclick={() => (mobileOpen = false)}
-									>
-										{#if isActive(child.href)}
-											<span class="mr-1.5 text-[10px]" aria-hidden="true">●</span>
-										{/if}
-										{$t('nav.' + child.key)}
-									</a>
-								{/each}
+								<span class="flex items-center">
+									{#if isParentActive(item)}
+										<span class="mr-1.5 text-[10px]" aria-hidden="true">●</span>
+									{/if}
+									{$t('nav.' + item.key)}
+								</span>
+								<svg
+									class="h-4 w-4 transition-transform duration-200 {mobileServicesOpen
+										? 'rotate-180'
+										: ''}"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									viewBox="0 0 24 24"
+									aria-hidden="true"
+								>
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+								</svg>
+							</button>
+							<div
+								class="mobile-sub"
+								class:mobile-sub--open={mobileServicesOpen}
+								aria-hidden={!mobileServicesOpen}
+							>
+								<div class="mobile-sub__clip">
+									<div class="ml-2 border-l border-[var(--color-line-strong)] pl-2">
+										{#each item.children as child (child.href)}
+											<a
+												href={resolve(asNavPath(child.href))}
+												class="block rounded-xl px-3 py-2.5 text-[14.5px] transition hover:bg-[var(--color-hover-soft)] hover:text-[var(--color-brand)] {isActive(
+													child.href
+												)
+													? 'font-semibold text-[var(--color-brand)]'
+													: 'text-[var(--color-ink)]'}"
+												onclick={() => closeMobileNav(true)}
+												tabindex={mobileServicesOpen ? 0 : -1}
+											>
+												{#if isActive(child.href)}
+													<span class="mr-1.5 text-[10px]" aria-hidden="true">●</span>
+												{/if}
+												{$t('nav.' + child.key)}
+											</a>
+										{/each}
+									</div>
+								</div>
 							</div>
-						{/if}
-					</div>
-				{:else}
-					<a
-						href={resolve(asNavPath(item.href))}
-						class="block rounded-xl px-3 py-3 text-[15px] transition {isActive(item.href)
-							? 'bg-orange-50 font-semibold text-[#E5554A]'
-							: 'text-[#302D2C] hover:bg-orange-50 hover:text-[#E5554A]'}"
-						onclick={() => (mobileOpen = false)}
-					>
-						{#if isActive(item.href)}
-							<span class="mr-1.5 text-[10px]" aria-hidden="true">●</span>
-						{/if}
-						{$t('nav.' + item.key)}
-					</a>
-				{/if}
-			{/each}
-		</nav>
-	{/if}
+						</div>
+					{:else}
+						<a
+							href={resolve(asNavPath(item.href))}
+							class="block rounded-xl px-3 py-3 text-[15px] transition {isActive(item.href)
+								? 'bg-[var(--color-hover-soft)] font-semibold text-[var(--color-brand)]'
+								: 'text-[var(--color-ink)] hover:bg-[var(--color-hover-soft)] hover:text-[var(--color-brand)]'}"
+							onclick={() => closeMobileNav(true)}
+							tabindex={mobileOpen ? 0 : -1}
+						>
+							{#if isActive(item.href)}
+								<span class="mr-1.5 text-[10px]" aria-hidden="true">●</span>
+							{/if}
+							{$t('nav.' + item.key)}
+						</a>
+					{/if}
+				{/each}
+			</div>
+		</div>
+	</nav>
 </header>
 
 <!--
-  Body portal + fixed: fully escapes sticky header stacking / view-transition clipping.
+  Desktop flyout only (lg+ / isDesktop).
+  Must never mount on phone — mobile uses the drawer accordion exclusively.
 -->
-{#if servicesOpen && servicesItem?.children}
+{#if desktopServicesOpen && isDesktop && servicesItem?.children}
 	<div
 		use:portal
 		class="services-dropdown fixed z-[300] min-w-[200px] -translate-x-1/2"
@@ -278,22 +393,22 @@
 		style:left="{menuPos.left}px"
 		role="menu"
 		tabindex="-1"
-		onmouseenter={keepServicesOpen}
-		onmouseleave={closeServices}
+		onmouseenter={keepDesktopServicesOpen}
+		onmouseleave={closeDesktopServices}
 	>
 		<div
-			class="services-menu relative rounded-xl border border-black/[0.06] bg-white px-2 py-2 shadow-[0_16px_40px_rgba(17,24,39,0.14)]"
+			class="services-menu relative rounded-xl border border-[var(--color-panel-border)] bg-[var(--color-panel)] px-2 py-2 shadow-[var(--shadow-card-hover)]"
 		>
 			<span class="services-tail" aria-hidden="true"></span>
 			{#each servicesItem.children as child (child.href)}
 				<a
 					href={resolve(asNavPath(child.href))}
 					role="menuitem"
-					class="relative z-10 block whitespace-nowrap rounded-lg px-3.5 py-2.5 text-[14.5px] transition hover:bg-orange-50 hover:text-[#E5554A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 {isActive(
+					class="relative z-10 block whitespace-nowrap rounded-lg px-3.5 py-2.5 text-[14.5px] transition hover:bg-[var(--color-hover-soft)] hover:text-[var(--color-brand)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 {isActive(
 						child.href
 					)
-						? 'bg-orange-50 font-semibold text-[#E5554A]'
-						: 'text-[#302D2C]'}"
+						? 'bg-[var(--color-hover-soft)] font-semibold text-[var(--color-brand)]'
+						: 'text-[var(--color-ink)]'}"
 				>
 					{#if isActive(child.href)}
 						<span class="mr-1 text-[10px]" aria-hidden="true">●</span>
@@ -308,7 +423,7 @@
 <style>
 	/*
 	 * Caret sits on the panel top edge.
-	 * White notch erases the border line under the tip.
+	 * Surface-colored notch erases the border line under the tip.
 	 */
 	.services-menu {
 		overflow: visible;
@@ -328,7 +443,7 @@
 		width: 14px;
 		height: 3px;
 		transform: translateX(-50%);
-		background: #fff;
+		background: var(--color-menu-tail);
 	}
 
 	.services-tail::before {
@@ -338,9 +453,109 @@
 		width: 10px;
 		height: 10px;
 		transform: translateX(-50%) rotate(45deg);
-		background: #fff;
-		border-left: 1px solid rgba(0, 0, 0, 0.08);
-		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		background: var(--color-menu-tail);
+		border-left: 1px solid var(--color-panel-border);
+		border-top: 1px solid var(--color-panel-border);
 		box-shadow: -1px -1px 2px rgba(17, 24, 39, 0.03);
+	}
+
+	.site-logo-link {
+		/* Reserve space from the in-flow light logo */
+		isolation: isolate;
+	}
+
+	/*
+	 * Top bar only — stable height for View Transition snapshots.
+	 * (Outer sticky wrapper in layout has no VT name.)
+	 */
+	:global(.site-header-vt) {
+		view-transition-name: site-header;
+	}
+
+	/* Drawer must not join the header VT group */
+	.mobile-nav {
+		view-transition-name: none;
+		display: grid;
+		grid-template-rows: 0fr;
+		border-top-width: 0;
+		border-top-style: solid;
+		transition:
+			grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+			border-top-width 0.2s ease;
+	}
+
+	.mobile-nav--open {
+		grid-template-rows: 1fr;
+		border-top-width: 1px;
+	}
+
+	/* Instant collapse when following a link / beforeNavigate */
+	.mobile-nav--instant,
+	.mobile-nav--instant .mobile-sub {
+		transition: none !important;
+	}
+
+	.mobile-nav__clip {
+		min-height: 0;
+		overflow: hidden;
+	}
+
+	.mobile-nav__inner {
+		transform: translateZ(0);
+	}
+
+	.mobile-sub {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.mobile-sub--open {
+		grid-template-rows: 1fr;
+	}
+
+	.mobile-sub__clip {
+		min-height: 0;
+		overflow: hidden;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mobile-nav,
+		.mobile-sub {
+			transition: none;
+		}
+	}
+
+	.site-logo {
+		transition:
+			opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+			filter 0.4s ease,
+			transform 0.3s ease;
+		will-change: opacity, filter;
+	}
+
+	.site-logo--active {
+		opacity: 1;
+		filter: none;
+	}
+
+	.site-logo--inactive {
+		opacity: 0;
+		filter: blur(2px) saturate(0.85);
+	}
+
+	/* Soft brand glow on dark logo when active */
+	.site-logo--dark.site-logo--active {
+		filter: drop-shadow(0 0 10px rgba(229, 85, 74, 0.18));
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.site-logo {
+			transition: opacity 0.15s ease;
+		}
+
+		.site-logo--inactive {
+			filter: none;
+		}
 	}
 </style>

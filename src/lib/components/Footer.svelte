@@ -5,7 +5,7 @@
 </script>
 
 <footer class="bg-[var(--color-brand-deep)] text-center text-white" id="footer">
-	<div class="relative h-[100px] bg-white sm:h-[120px]">
+	<div class="relative h-[100px] bg-[var(--color-surface)] sm:h-[120px]">
 		<div
 			class="absolute bottom-[-60px] left-1/2 z-10 h-[120px] w-[120px] -translate-x-1/2 sm:bottom-[-75px] sm:h-[150px] sm:w-[150px]"
 		>

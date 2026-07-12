@@ -27,10 +27,10 @@
 				{#each about.features as feature, i (i)}
 					{@const f = c.about.features[i]}
 					<div
-						class="group relative overflow-hidden rounded-2xl border border-black/[0.04] bg-white px-5 py-8 text-center shadow-[0_6px_24px_rgba(17,24,39,0.05)] transition duration-300 hover:-translate-y-1 hover:border-[var(--color-brand)]/20 hover:shadow-[0_14px_34px_rgba(229,85,74,0.12)]"
+						class="group relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface-elevated)] px-5 py-8 text-center shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-[var(--color-brand)]/20 hover:shadow-[0_14px_34px_rgba(229,85,74,0.12)]"
 					>
 						<div
-							class="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--color-surface-soft)] ring-1 ring-black/[0.03] transition duration-300 group-hover:bg-orange-50 group-hover:ring-orange-100"
+							class="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--color-surface-soft)] ring-1 ring-[var(--color-line)] transition duration-300 group-hover:bg-[var(--color-hover-soft)] group-hover:ring-[var(--color-brand)]/20"
 						>
 							<img
 								src={asset(feature.icon)}
@@ -73,13 +73,13 @@
 				{#each about.team as member, i (i)}
 					{@const m = c.about.team[i]}
 					<article
-						class="team-card group flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_6px_22px_rgba(17,24,39,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(17,24,39,0.1)]"
+						class="team-card group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface-elevated)] shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
 					>
 						<div class="media-frame media-frame--portrait relative aspect-[4/5]">
 							<img src={asset(member.image)} alt={m?.name} loading="lazy" />
 							{#if m?.role}
 								<span
-									class="absolute bottom-3 left-3 z-[3] rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold tracking-wide text-[var(--color-brand)] shadow-sm backdrop-blur-sm"
+									class="absolute bottom-3 left-3 z-[3] rounded-full bg-[color-mix(in_srgb,var(--color-panel)_95%,transparent)] px-2.5 py-1 text-[11px] font-bold tracking-wide text-[var(--color-brand)] shadow-sm backdrop-blur-sm"
 								>
 									{m.role}
 								</span>
@@ -111,7 +111,7 @@
 
 							{#if member.ext || member.email}
 								<div
-									class="mt-auto flex flex-col gap-1 border-t border-black/[0.05] pt-3 text-[12px] text-gray-500"
+									class="mt-auto flex flex-col gap-1 border-t border-[var(--color-line)] pt-3 text-[12px] text-gray-500"
 								>
 									{#if member.ext}
 										<p class="flex items-center gap-1.5 truncate">

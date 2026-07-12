@@ -31,13 +31,13 @@
 		}
 	] as link (link.href)}
 		<div
-			class="pointer-events-auto rounded-full border border-black/10 bg-white/95 text-[13px] shadow-[0_8px_22px_rgba(0,0,0,0.12)] backdrop-blur-sm transition duration-200 ease-out {link.hoverBorder} hover:-translate-x-1.5 hover:shadow-lg"
+			class="pointer-events-auto rounded-full border border-[var(--color-line-strong)] bg-[color-mix(in_srgb,var(--color-panel)_92%,transparent)] text-[13px] shadow-[var(--shadow-float)] backdrop-blur-sm transition duration-200 ease-out {link.hoverBorder} hover:-translate-x-1.5 hover:shadow-lg"
 		>
 			<a
 				href={link.href}
 				target="_blank"
 				rel="noopener external"
-				class="flex items-center gap-2 px-3.5 py-2.5 text-black no-underline transition {link.hoverText}"
+				class="flex items-center gap-2 px-3.5 py-2.5 text-[var(--color-ink)] no-underline transition {link.hoverText}"
 			>
 				<img
 					src={asset(link.icon, true)}

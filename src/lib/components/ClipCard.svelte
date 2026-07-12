@@ -13,7 +13,7 @@
 	const yellow = $derived(index === 1 || index === 2);
 </script>
 
-<article class="group grid min-h-[250px] overflow-hidden bg-white md:grid-cols-2">
+<article class="group grid min-h-[250px] overflow-hidden bg-[var(--color-surface-elevated)] md:grid-cols-2">
 	{#if imageFirst}
 		<div class="media-frame min-h-[220px] sm:min-h-[250px] md:h-full md:min-h-[250px]">
 			<img {src} alt={title} class="min-h-[220px] sm:min-h-[250px]" loading="lazy" decoding="async" />
@@ -23,14 +23,14 @@
 	<div
 		class="flex min-h-[220px] flex-col p-6 transition-colors duration-300 sm:min-h-[250px] sm:p-7 {yellow
 			? 'bg-[#fbc600] text-white'
-			: 'bg-[#f4f4f4] text-[#222]'}"
+			: 'bg-[var(--color-surface-soft)] text-[var(--color-ink)]'}"
 	>
-		<p class="text-sm font-medium {yellow ? 'text-white/90' : 'text-[#9aa0a6]'}">{year}</p>
+		<p class="text-sm font-medium {yellow ? 'text-white/90' : 'text-[var(--color-muted)]'}">{year}</p>
 		<h4 class="mt-5 text-lg font-black leading-snug sm:mt-6 sm:text-xl">{title}</h4>
 		<p
 			class="mt-4 line-clamp-3 text-[15px] font-semibold leading-relaxed sm:mt-5 sm:text-base {yellow
 				? 'text-white/95'
-				: 'text-[#9aa0a6]'}"
+				: 'text-[var(--color-muted)]'}"
 		>
 			{desc}
 		</p>

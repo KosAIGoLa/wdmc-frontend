@@ -47,6 +47,10 @@ export default {
 		contactUs: 'Contact Us',
 		bookNow: 'Book now',
 		joinUs: 'Join us',
+		themeLight: 'Light',
+		themeDark: 'Dark',
+		themeToLight: 'Switch to light mode',
+		themeToDark: 'Switch to dark mode',
 		form: {
 			name: 'Name',
 			email: 'Email',
